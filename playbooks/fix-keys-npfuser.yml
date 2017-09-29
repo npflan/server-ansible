@@ -1,0 +1,20 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: ensure root id_rsa
+    copy: src=/root/.ssh/id_rsa dest=/root/.ssh/id_rsa mode=600
+
+  - name: ensure root ssh config
+    copy: src=/root/.ssh/config dest=/root/.ssh/config mode=600
+
+  - name: ensure npfuser .ssh exists
+    file: path=/home/npfuser/.ssh owner=npfuser group=npfuser mode=0755 state=directory
+
+  - name: ensure npfuser id_rsa
+    copy: src=/root/.ssh/id_rsa dest=/home/npfuser/.ssh/id_rsa owner=npfuser group=npfuser mode=600
+
+  - name: ensure npfuser authorized_keys
+    copy: src=/root/.ssh/id_rsa.pub dest=/home/npfuser/.ssh/authorized_keys group=npfuser owner=npfuser mode=755
+
+  - name: ensure npfuser ssh config
+    copy: src=/root/.ssh/config dest=/home/npfuser/.ssh/config owner=npfuser group=npfuser mode=600 

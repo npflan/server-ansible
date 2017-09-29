@@ -1,0 +1,23 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: ensure root .ssh exists
+    file: path=/root/.shh owner=root group=root mode=755 state=directory
+
+  - name: ensure root id_rsa
+    copy: src=/root/.ssh/id_rsa dest=/root/.ssh/id_rsa mode=600
+
+  - name: ensure root ssh config
+    copy: src=/root/.ssh/config dest=/root/.ssh/config mode=600
+
+  - name: ensure steam .ssh exists
+    file: path=/home/steam/.ssh owner=steam group=steam mode=0755 state=directory
+
+  - name: ensure steam id_rsa
+    copy: src=/root/.ssh/id_rsa dest=/home/steam/.ssh/id_rsa owner=steam group=steam mode=600
+
+  - name: ensure steam authorized_keys
+    copy: src=/root/.ssh/id_rsa.pub dest=/home/steam/.ssh/authorized_keys group=steam owner=steam mode=755
+
+  - name: ensure steam ssh config
+    copy: src=/root/.ssh/config dest=/home/steam/.ssh/config owner=steam group=steam mode=600 

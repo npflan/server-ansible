@@ -1,0 +1,17 @@
+---
+- hosts: npf_gameservers
+  tasks:
+    - name: remove dodgy dns-nameservers line
+      lineinfile: dest=/etc/network/interfaces
+              regexp="^dns-nameservers (?!10\.0\.1)"
+              state=absent
+
+    - name: check if dns-nameservers exists in interfaces
+      lineinfile: dest=/etc/network/interfaces state=present 
+              regexp="^dns-nameservers 8.8.8.8 8.8.4.4" 
+              line='dns-nameservers 8.8.8.8 8.8.4.4'
+              insertafter='^gateway 10.100.20.1'
+
+    - name: check if dns-nameservers exits in
+      lineinfile: dest=/etc/resolv.conf
+              regexp="

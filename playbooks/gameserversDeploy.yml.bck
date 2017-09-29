@@ -1,0 +1,36 @@
+---
+- hosts: npf_gameservers
+  gather_facts: True
+  vars:
+    game_count: "{{ (ansible_processor_vcpus / 2) | int  }}"
+  tasks:
+  - debug: var=game_count
+
+  - name: synchronize csgo instance 1 with repository
+#        debug: var=item
+    command: mkdir -p /home/npfuser/1/csgo
+    command: rsync -a root@10.100.20.10:/repository/csgo/ /home/npfuser/1/csgo
+    async: 18000
+    poll: 90
+
+  - name: synchronize css instance 1 with repository
+    command: mkdir -p /home/npfuser/1/css
+    command: rsync -a root@10.100.20.10:/repository/css/ /home/npfuser/1/css
+    async: 18000
+    poll: 90
+
+  - name: synchronize csgo instance 1 to x
+    command: mkdir -p /home/npfuser/{{ item }}/csgo
+    with_sequence: start=1 end={{ game_count }}
+    command: rsync -a /home/npfuser/1/csgo /home/npfuser/{{ game_count }}/csgo
+    with_sequence: start=1 end={{ game_count }}
+    async: 18000
+    poll: 90
+
+  - name: synchronize css instance 1 to x
+    command: mkdir -p /home/npfuser/{{ item }}/css
+    with_sequence: start=1 end={{ game_count }}
+    command: rsync -a /home/npfuser/1/css /home/npfuser/{{ game_count }}/css
+    with_sequence: start=1 end={{ game_count }}
+    async: 18000
+    poll: 90

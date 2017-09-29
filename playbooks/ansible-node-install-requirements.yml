@@ -1,0 +1,5 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: ensure required python2.7 and python-simplejson packages are installed
+    raw: apt -y update && apt install -y python2.7 python-simplejson

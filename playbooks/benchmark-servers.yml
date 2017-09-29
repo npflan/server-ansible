@@ -1,0 +1,15 @@
+---
+- hosts: npf_rack1
+  tasks:
+
+  - name: remove old test file
+    file: path='/home/test.1g' state=absent
+
+  - name: benchmark hdd
+    shell: time dd if=/dev/zero of=/home/test.1g bs=256M count=4 | head -n 3 | tail -n 1
+    args:
+      executable: /bin/bash
+    register: output
+
+  - debug: "{{ output.stderr.split(\"\n\") }}"
+

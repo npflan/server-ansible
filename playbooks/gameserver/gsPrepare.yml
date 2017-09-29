@@ -1,0 +1,22 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: Creating directory for repository
+    command: mkdir -p /srv/repo
+
+  - name: Creating directory for logs
+    command: mkdir -p /srv/logs
+
+  - name: Setting ownership of /srv directory
+    command: chown -R steam:steam /srv
+
+  - name: Retriving initial deployment
+    command: rsync -a 10.100.107.10:/srv/repo/ /srv/repo/
+    async: 18000
+    poll: 20
+
+  - name: Retiving server script
+    command: scp 10.100.107.10:/srv/server.sh /srv/
+
+  - name: changeing ownership of files
+    command: chown -R steam:steam /srv

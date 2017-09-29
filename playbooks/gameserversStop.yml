@@ -1,0 +1,11 @@
+---
+- hosts: npf_gameservers
+  gather_facts: True
+  remote_user: gameuser
+  vars:
+    game_count: "{{ (ansible_processor_vcpus / 2) | int  }}"
+  tasks:
+
+  - name: Stopping gameservers
+    command: server stop {{ item }}
+    with_sequence: start=1 end={{ game_count }}

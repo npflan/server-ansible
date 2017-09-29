@@ -1,0 +1,7 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: ensure correct apt.conf
+    raw: echo 'Acquire::http::Proxy \"http://10.100.100.3:3142\";' > /etc/apt/apt.conf
+  - name: ensure correct Hosts file
+    raw: cat /etc/hostname | awk '{ print "::1     localhost ip6-localhost ip6-loopback\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\n127.0.0.1 localhost\n127.0.1.1 " $1 }' > /etc/hosts
