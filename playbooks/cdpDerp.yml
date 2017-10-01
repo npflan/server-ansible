@@ -1,0 +1,51 @@
+---
+- hosts: npf_gameservers
+  vars:
+    rackskabe_start:
+      "103": 10.100.0.0
+      "106": 10.100.4.0
+      "107": 10.100.8.0
+    gameservers_per_host: 16
+  tasks:
+  - name: listen for cdp
+    shell: timeout 60 tcpdump -nn -v -i eth0 -s 1500 -c 1 'ether[20:2] == 0x2000'|awk 'match($0, /GigabitEthernet1\/([0-9]{1,2})/,a){print a[1]}'
+    register: tcpdump_command
+  - debug: msg={{tcpdump_command.stdout}}
+  - set_fact:
+      portnummer: "{{ tcpdump_command.stdout|int }}"
+      cacheable: true
+    when:  tcpdump_command.stdout|int(-1) != -1 
+  - debug: msg={{tcpdump_command.stdout|int(-1)}}
+#  - debug: msg={{portnummer}}
+  - name: check if portnummer is set
+    fail: msg="portnummer is undefined"
+    when: portnummer is not defined
+
+
+  - name: checking ip address
+    set_fact:
+      rackskab: "{{ ansible_eth0.ipv4.address.split('.')[2] }}"
+      cacheable: true
+    when: ansible_eth0.ipv4.address.split('.')[2] in ["103","106","107"]
+  - debug: msg={{ ansible_eth0.ipv4.address.split('.')[2] in ["103","106","107"]}}
+  - debug: msg={{ rackskab }}
+  - name: check if rackskab is defined
+    fail: msg="rackskab is undefined"
+    when: rackskab is not defined
+
+  - name: Print phone records
+    debug:
+      msg: "User {{ item.key }} is {{ item.value }} ({{ item.value }})"
+    with_dict: "{{ rackskabe_start }}"
+
+  - name: finding my scope placement
+    local_action: command /root/ipincrementer {{rackskabe_start[""+rackskab]}} {{gameservers_per_host * portnummer|int}}
+    register: netid
+  - debug: msg={{netid}}
+
+  - name: check if netid is ip
+    fail: msg="netid is not ip"
+    when: netid|ipaddr != true
+
+  - name: generate quagga config
+    template: 
