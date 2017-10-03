@@ -6,6 +6,7 @@
       "106": 10.100.4.0
       "107": 10.100.8.0
     gameservers_per_host: 16
+    netid_maskbit: 28
   tasks:
   - name: listen for cdp
     shell: timeout 60 tcpdump -nn -v -i eth0 -s 1500 -c 1 'ether[20:2] == 0x2000'|awk 'match($0, /GigabitEthernet1\/([0-9]{1,2})/,a){print a[1]}'
@@ -46,6 +47,21 @@
   - name: check if netid is ip
     fail: msg="netid is not ip"
     when: netid|ipaddr != true
-
-  - name: generate quagga config
-    template: 
+    
+  - name: finding all my ips
+    local_action: command /root/iplister {{netid}}/{{netid_maskbit}}
+    register: iplist_command
+  
+  - name: set fact for that
+    set_fact:
+      interfaces: iplist_command.stdout_lines
+    
+  - name: generate bird config
+    template:
+      src: /etc/ansible/templates/gameservers/bird.conf
+      dest: /etc/bird/bird.conf
+    
+  - name: generate interfaces file
+    template:
+      src: /etc/ansible/templates/gameservers/interfaces
+      dest: /etc/network/interfaces.test

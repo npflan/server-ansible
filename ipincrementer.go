@@ -42,7 +42,8 @@ func main(){
 }
 
 func printUsage(){
-
+	fmt.Println(os.Args[0]+" startip incrementAmount")
+	fmt.Println("Example: "+os.Args[0]+" 192.168.0.0 10")
 }
 
 
