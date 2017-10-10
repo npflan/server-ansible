@@ -7,9 +7,15 @@
       "107": 10.100.8.0
     gameservers_per_host: 16
     netid_maskbit: 28
+    ospf_area:
+      "103": 53
+      "106": 56
+      "107": 57
   tasks:
   - name: listen for cdp
     shell: timeout 60 tcpdump -nn -v -i eth0 -s 1500 -c 1 'ether[20:2] == 0x2000'|awk 'match($0, /GigabitEthernet1\/([0-9]{1,2})/,a){print a[1]}'
+    async: 60
+    poll: 15
     register: tcpdump_command
   - debug: msg={{tcpdump_command.stdout}}
   - set_fact:
@@ -34,28 +40,33 @@
     fail: msg="rackskab is undefined"
     when: rackskab is not defined
 
-  - name: Print phone records
-    debug:
-      msg: "User {{ item.key }} is {{ item.value }} ({{ item.value }})"
-    with_dict: "{{ rackskabe_start }}"
-
   - name: finding my scope placement
     local_action: command /root/ipincrementer {{rackskabe_start[""+rackskab]}} {{gameservers_per_host * portnummer|int}}
-    register: netid
-  - debug: msg={{netid}}
+    register: netid_command
+  - debug: msg={{netid_command}}
 
   - name: check if netid is ip
-    fail: msg="netid is not ip"
-    when: netid|ipaddr != true
+    set_fact:
+      netid: "{{netid_command.stdout}}"
+    when: netid_command.stdout|ipaddr != true
+
+  - name: check if netid is defined
+    fail: msg="netid is undefined"
+    when: netid is not defined
     
   - name: finding all my ips
     local_action: command /root/iplister {{netid}}/{{netid_maskbit}}
     register: iplist_command
-  
+
+  - debug: msg={{iplist_command}}
+
   - name: set fact for that
     set_fact:
-      interfaces: iplist_command.stdout_lines
-    
+      interfaces: "{{iplist_command.stdout_lines}}"
+  
+  - name: installere lige bird
+    apt: pkg=bird state=installed 
+ 
   - name: generate bird config
     template:
       src: /etc/ansible/templates/gameservers/bird.conf
@@ -64,4 +75,14 @@
   - name: generate interfaces file
     template:
       src: /etc/ansible/templates/gameservers/interfaces
-      dest: /etc/network/interfaces.test
+      dest: /etc/network/interfaces
+
+  - name: tager lige alle interfaces ned
+    command: /sbin/ifdown -a
+    async: 72
+    poll: 5
+
+  - name: og op igen!
+    command: /sbin/ifup -a
+    async: 72
+    poll: 5

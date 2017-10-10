@@ -1,0 +1,9 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: henter lige en ny sources.list
+    copy:
+      src: /etc/apt/sources.list
+      dest: /etc/apt/sources.list
+      backup: yes
+      remote_src: yes
