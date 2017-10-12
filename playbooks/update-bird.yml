@@ -75,21 +75,6 @@
       src: /etc/ansible/templates/gameservers/bird.conf
       dest: /etc/bird/bird.conf
     
-  - name: generate interfaces file
-    template:
-      src: /etc/ansible/templates/gameservers/interfaces
-      dest: /etc/network/interfaces
-
-  - name: tager lige alle interfaces ned
-    command: /sbin/ifdown -a
-    async: 72
-    poll: 5
-
-  - name: og op igen!
-    command: /sbin/ifup -a
-    async: 72
-    poll: 5
-
   - name: sætter lige bird til at starte op automatisk
     command: /usr/sbin/update-rc.d bird enable
     async: 72
@@ -97,4 +82,4 @@
   - name: og sørger lige for at bird er startet
     service:
       name: bird
-      state: started
+      state: restarted

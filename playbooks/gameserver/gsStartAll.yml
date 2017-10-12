@@ -1,0 +1,7 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: Starting all gameservers
+    command: /srv/server.sh start all
+    become: true
+    become_user: steam

@@ -1,0 +1,34 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: henter lige en ny sources.list til HP-mcp
+    copy:
+      src: /etc/apt/sources.list.d/HP-mcp.list
+      dest: /etc/apt/sources.list.d/HP-mcp.list
+
+  - name: tilføjer hpPublicKey1024
+    command: sh -c "wget -qO - http://downloads.linux.hpe.com/SDR/hpPublicKey1024.pub | apt-key add -"
+    async: 0
+    poll: 0
+
+  - name: tilføjer hpPublicKey2048
+    command: sh -c "wget -qO - http://downloads.linux.hpe.com/SDR/hpPublicKey2048.pub | apt-key add -"
+    async: 0
+    poll: 0
+
+  - name: tilføjer hpPublicKey2048 v1
+    command: sh -c "wget -qO - http://downloads.linux.hpe.com/SDR/hpPublicKey2048_key1.pub | apt-key add -"
+    async: 0
+    poll: 0
+
+  - name: tilføjer hpePublicKey2048 v1
+    command: sh -c "wget -qO - http://downloads.linux.hpe.com/SDR/hpePublicKey2048_key1.pub | apt-key add -"
+    async: 0
+    poll: 0
+
+
+  - name: update apt cache og install hponcfg
+    apt:
+      name: hponcfg
+      state: installed 
+      update_cache: yes

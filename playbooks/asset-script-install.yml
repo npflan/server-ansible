@@ -1,0 +1,53 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: smider xml script til asset tag navngivning
+    copy:
+      src: /etc/ansible/templates/asset_setservername.xml
+      dest: /root/set_servername.xml
+
+  - name: soerger liger for at systemd system mappen eksisterer
+    file: path=/etc/systemd/system/getty@tty2.service.d/conf state=directory
+
+  - name: overskriver tty2 til autologin
+    copy:
+      content: |+
+        [Service]
+        ExecStart=-/sbin/agetty --noclear %I $TERM
+        ExecStart=
+        ExecStart=-/sbin/agetty -a root --noclear %I $TERM -o'-p -f -- \u ASSETTAGREGISTRERING=TRUE' 
+      dest: /etc/systemd/system/getty@tty2.service.d/override.conf
+
+  - name: overskriver .bashrc for root bruger
+    copy:
+      src: /etc/ansible/templates/asset.bashrc
+      dest: /root/.bashrc
+
+  - name: reload lige systemctl daemons
+    command: systemctl daemon-reload
+    async: 0
+
+  - name: reloader tty2
+    command: systemctl restart getty@tty2
+    async: 0
+
+  - name: smider asset registrerings script på servere
+    copy:
+      content: |+
+        #!/bin/bash
+        echo indtast ingenting for at goere ingenting
+        read -p "Indtast asset tag : " assettag
+        if [[ "" = "$assettag" ]]; then
+          echo Goer ikke noget
+          exit 0
+        fi
+        echo $assettag > /etc/hostname
+        hponcfg -f /root/set_servername.xml -s SERVERNAME=$assettag
+      dest: /root/setservername.bash
+      mode: u+rwx
+
+  - name: update apt cache og install hponcfg
+    apt:
+      name: hponcfg
+      state: installed 
+      update_cache: yes

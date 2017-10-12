@@ -5,5 +5,18 @@
     copy:
       src: /etc/apt/sources.list
       dest: /etc/apt/sources.list
-      backup: yes
-      remote_src: yes
+      force: yes
+
+  - name: update apt cache
+    apt: 
+      update_cache: yes
+
+  - name: sætter lige bird til at starte op automatisk
+    command: /usr/sbin/update-rc.d bird enable
+    async: 72
+
+  - name: og sørger lige for at bird er startet
+    service:
+      name: bird
+      state: started
+

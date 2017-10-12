@@ -7,16 +7,17 @@
   - name: Creating directory for logs
     command: mkdir -p /srv/logs
 
+  - name: Set starup game
+    command: echo 'csgo' > /srv/game.cfg
+
   - name: Setting ownership of /srv directory
     command: chown -R steam:steam /srv
 
-  - name: Retriving initial deployment
-    command: rsync -a 10.100.107.10:/srv/repo/ /srv/repo/
-    async: 18000
-    poll: 20
+  - name: Transfer repo directory
+    command: scp -r 10.100.103.8:/srv/repo/* /srv/repo/
 
-  - name: Retiving server script
-    command: scp 10.100.107.10:/srv/server.sh /srv/
+  - name: Transfer server script
+    command: scp -r 10.100.103.8:/srv/server.sh /srv/
 
   - name: changeing ownership of files
     command: chown -R steam:steam /srv

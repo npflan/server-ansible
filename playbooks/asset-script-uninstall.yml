@@ -1,0 +1,17 @@
+---
+- hosts: npf_gameservers
+  gather_facts: no
+  tasks:
+  - name: fjerner tty2 overrides
+    file:
+      state: absent
+      path: "/etc/systemd/system/getty@tty2.service.d"
+
+  - name: reloader system-daemons
+    command: systemctl daemon-reload
+    async: 0
+
+  - name: reloader tty2
+    command: systemctl restart getty@tty2
+    async: 0
+

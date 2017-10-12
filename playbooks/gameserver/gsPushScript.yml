@@ -1,0 +1,8 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: Updateing server.sh script
+    command: scp 10.100.103.8:/srv/server.sh /srv/
+
+  - name: changeing ownership of files
+    command: chown -R steam:steam /srv

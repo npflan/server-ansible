@@ -1,0 +1,17 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: Install screen
+    apt:
+      name: "screen"
+  - name: Accept SteamCMD License
+    debconf:
+      name: "steamcmd"
+      question: "steam/question"
+      value: "I AGREE"
+      vtype: "select"
+  - name: Install SteamCMD
+    apt:
+      name: "steamcmd"
+  - name: Updateing SteamCMD
+    command: steamcmd +exit
