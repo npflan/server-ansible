@@ -1,5 +1,0 @@
----
-- hosts: npf_gameservers
-  tasks:
-  - name: recreate apt.conf
-    raw: echo 'Acquire::http::Proxy "http://10.100.100.3:3142";' > /etc/apt/apt.conf
