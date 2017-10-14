@@ -1,0 +1,14 @@
+- hosts: npf_gameservers
+  tasks:
+  - name: Check whether /etc/fstab contains /home
+    command: grep -Fq "/home" /etc/fstab
+    register: checkforhome
+    check_mode: False
+    ignore_errors: True
+    changed_when: False
+
+  - debug: msg={{checkforhome}}
+
+  - name: hvis ja så skriv noget
+    debug: msg="derp"
+    when: checkforhome.rc == 0
