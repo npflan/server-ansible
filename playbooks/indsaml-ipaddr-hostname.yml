@@ -1,0 +1,10 @@
+---
+- hosts: npf_gameservers
+  gather_facts: yes
+  tasks:
+  - debug: 
+  - name: update apt cache og install hponcfg
+    apt:
+      name: hponcfg
+      state: installed 
+      update_cache: yes

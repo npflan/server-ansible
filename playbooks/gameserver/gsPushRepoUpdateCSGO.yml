@@ -1,0 +1,10 @@
+---
+- hosts: csgo
+  tasks:
+  - name: Starting synchronization with repository server
+    command: rsync -a root@10.100.103.8:/srv/repo/ /srv/repo/
+    async: 18000
+    poll: 20
+
+  - name: changeing ownership of files
+    command: chown -R steam:steam /srv
