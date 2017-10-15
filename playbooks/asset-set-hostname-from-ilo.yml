@@ -24,3 +24,6 @@
     dest: /etc/hostname
 
 - command: hostname -F /etc/hostname
+
+- set_fact:
+    hostname: "{{ ilo_hostname }}"
