@@ -17,3 +17,22 @@
   - name: hvis hostname ikke er korrekt
     include_tasks: asset-set-hostname-from-ilo.yml
     when: hostname is not defined or hostname == "unassigned" or hostname == "ubuntu"
+
+  - copy:
+      content: "{{ hostname }}"
+      dest: /tmp/hostname
+
+  - debug:
+      var: hostvars[inventory_hostname]
+
+  - copy:
+      content: "{{ ansible_eth0.macaddress }}"
+      dest: /tmp/mac
+
+  - fetch:
+      src: /tmp/hostname
+      dest: /tmp/hostnames
+
+  - fetch:
+      src: /tmp/mac
+      dest: /tmp/hostnames
