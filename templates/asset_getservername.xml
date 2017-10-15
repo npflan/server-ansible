@@ -1,0 +1,12 @@
+<RIBCL version="2.21">
+<LOGIN USER_LOGIN="Administrator" PASSWORD="password">
+<SERVER_INFO MODE="read" >
+<SERVER_NAME />
+</SERVER_INFO>
+<RIB_INFO mode="read">
+<MOD_NETWORK_SETTINGS>
+<DNS_NAME />
+</MOD_NETWORK_SETTINGS>
+</RIB_INFO>
+</LOGIN>
+</RIBCL>

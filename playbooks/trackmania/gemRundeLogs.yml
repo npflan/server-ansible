@@ -1,0 +1,24 @@
+---
+- hosts: trackmania
+  gather_facts: no
+  vars:
+    gameserverinstans: [1 , 2]
+  tasks:
+  - find: paths="/srv/{{ item|string }}/Logs/" patterns="GameLog.*.txt"
+    register: files_to_copy
+    with_items: "{{ gameserverinstans }}"
+  - debug: msg={{ files_to_copy }}
+#  - fetch:
+#      dest: /backup/trackmania/gamelogs
+#      src: "{{ item[0].path }}"
+  - set_fact:
+      filer: "{{ files_to_copy.results | map(attribute='files') | list }}"
+  - debug: msg={{ filer }}
+  - set_fact:
+      filer2: "{{ item |map(attribute='path')}}"
+    register: filer_results
+    with_items: "{{ filer }}"
+  - debug: var=filer2
+  - set_fact: 
+       filer3: "{{ filer_results.results | map(attribute='ansible_facts.filer2') | list }}"
+  - debug: var=filer3

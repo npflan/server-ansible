@@ -1,0 +1,26 @@
+- name: xml til at gette hostnamet
+  copy:
+    src: /etc/ansible/templates/asset_getservername.xml
+    dest: /root/
+  
+- command: hponcfg -f /root/asset_getservername.xml -w /dev/stdout
+  register: hponcfg_result
+
+- debug:
+    var: hponcfg_result
+
+- set_fact:
+    ilo_hostname: "{{ hponcfg_result.stdout | regex_replace('(\\\")', '\"') | regex_search('DNS_NAME VALUE=\"([0-9]+)') | regex_search('[0-9]+') }}"
+
+- name: tjek om ilo_hostname er sat
+  fail: msg="ilo_hostname er tomt"
+  when: ilo_hostname == "" or ilo_hostname is not defined
+
+- debug:
+    var: ilo_hostname
+
+- copy:
+    content: "{{ ilo_hostname }}"
+    dest: /etc/hostname
+
+- command: hostname -F /etc/hostname

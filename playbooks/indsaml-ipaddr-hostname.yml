@@ -2,9 +2,18 @@
 - hosts: npf_gameservers
   gather_facts: yes
   tasks:
-  - debug: 
-  - name: update apt cache og install hponcfg
-    apt:
-      name: hponcfg
-      state: installed 
-      update_cache: yes
+  - name: henter hostname
+    command: cat /etc/hostname
+    async: 0
+    poll: 15
+    register: hostname_result
+
+  - set_fact:
+      hostname: "{{ hostname_result.stdout }}"
+
+  - debug:
+      var: "{{ hostname }}"
+
+  - name: hvis hostname ikke er korrekt
+    include_tasks: asset-set-hostname-from-ilo.yml
+    when: hostname is not defined or hostname == "unassigned" or hostname == "ubuntu"
