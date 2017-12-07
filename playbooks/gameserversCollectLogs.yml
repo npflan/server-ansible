@@ -1,6 +1,0 @@
----
-- hosts: npf_gameservers
-  tasks:
-
-  - name: Starting gameservers
-    command: scp `find /home/npfuser/ -name '*_*.log'` 10.100.20.10:/home/logs/

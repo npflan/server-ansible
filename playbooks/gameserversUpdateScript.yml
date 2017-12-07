@@ -1,5 +1,0 @@
----
-- hosts: npf_gameservers
-  tasks:
-  - name: updating script
-    command: rsync root@10.100.20.10:/bin/server /bin/server
