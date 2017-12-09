@@ -39,9 +39,15 @@
 
   - debug: msg={{ansible_play_batch}}
 
-  - set_fact: {"{{item.1}}" : "{{item.0}}"}
+  - set_fact:
+      iter: "{{iter}} + {{item}}"
+    with_sequence: "start=1 count={{ (ansible_play_batch | count) + 1}}"
+  
+  - debug: msg={{iter}}
+
+  - set_fact: {"{{ item.1 }}" : "{{ servertokens_cat.stdout_lines[item.0]}}"}
     with_together:
-    - "{{ servertokens_cat.stdout_lines }}"
+    - "{{ iter }}"
     - "{{ ansible_play_batch | ipaddr('address') | ipaddr('int') }}"
 
   - debug: msg={{item | ipaddr('address') | ipaddr('int')}}
