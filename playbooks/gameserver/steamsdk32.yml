@@ -62,9 +62,6 @@
 
   - debug: var=servertokens_ids
   - debug: var=servertokens
-
-  - set_fact:
-      servertokens_combined: []
   
   - set_fact:
       servertokens_combined: '{{servertokens_combined|default({}) |combine({item.0: item.1})}}'
