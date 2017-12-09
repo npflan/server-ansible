@@ -55,11 +55,12 @@
   - debug: msg="{{item.split(' ')[0]}} {{item.split(' ')[1]}}"
     with_items: "{{ servertokens_cat.stdout_lines }}"
 
-#  - set_fact:
-#      servertokens_ids: item
-#    with_items: "{{ servertokens_cat.stdout_lines | split(" ") }
+  - set_fact:
+      servertokens_ids: "{{servertokens_ids}} + {{item.split(' ')[0]}}"
+      servertokens: "{{servertokens}} + {{item.split(' ')[1]}}"
+    with_items: "{{ servertokens_cat.stdout_lines }}"
 
-  - debug: msg={{iter}}
+  - debug: msg={{servertokens_ids}}
 
   - set_fact: {"{{ item.1 }}" : "{{ servertokens_cat.stdout_lines[item.0] }}"}
     with_together:
