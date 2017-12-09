@@ -42,7 +42,7 @@
   - set_fact: {"{{item.1}}" : "{{item.0}}"}
     with_together:
     - "{{ servertokens_cat.stdout_lines }}"
-    - "{{ ansible_play_batch }}"
+    - "{{ ansible_play_batch | ipaddr('address') | ipaddr('int') }}"
 
-  - debug: msg={{item}}
+  - debug: msg={{item | ipaddr('address') | ipaddr('int')}}
     with_items: ansible_play_batch
