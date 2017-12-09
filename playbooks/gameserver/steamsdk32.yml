@@ -37,4 +37,12 @@
   
   - debug: msg={{servertokens_cat.stdout_lines}}
 
-  - debug: msg={{ansible_play_batch}} 
+  - debug: msg={{ansible_play_batch}}
+
+  - set_fact: {"{{item.1}}" : "{{item.0}}"}
+    with_together:
+    - "{{ servertokens_cat.stdout_lines }}"
+    - "{{ ansible_play_batch }}"
+
+  - debug: msg={{item}}
+    with_items: ansible_play_batch
