@@ -32,7 +32,7 @@
     when: servertokens_stat.stat.exists == False
 
   - name: Get all server tokens
-    local_action: cat servertokens.txt
+    local_action: command cat servertokens.txt
     register: servertokens_cat
   
   - debug: msg={{servertokens_cat}}
