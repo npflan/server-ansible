@@ -56,8 +56,8 @@
     with_items: "{{ servertokens_cat.stdout_lines }}"
 
   - set_fact:
-      servertokens_ids: "{{servertokens_ids}} + {{item.split(' ')[0]}}"
-      servertokens: "{{servertokens}} + {{item.split(' ')[1]}}"
+      servertokens_ids: "{{servertokens_ids}} + [ {{item.split(' ')[0]}} ]"
+      servertokens: "{{servertokens}} + [ {{item.split(' ')[1]}} ]"
     with_items: "{{ servertokens_cat.stdout_lines }}"
 
   - debug: msg={{servertokens_ids}}
