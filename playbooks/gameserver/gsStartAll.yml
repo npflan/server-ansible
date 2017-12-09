@@ -1,5 +1,6 @@
 ---
 - hosts: npf_gameservers
+  gather_facts: no
   tasks:
   - name: Starting all gameservers
     command: /srv/server.sh start all
