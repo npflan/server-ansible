@@ -100,4 +100,5 @@
   - set_fact: 
       tokens_to_use: "{{ servertokens_combined[iterator|string+':1'] }}"
 
+  - debug: var=iterator
   - debug: var=tokens_to_use
