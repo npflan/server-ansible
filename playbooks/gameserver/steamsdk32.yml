@@ -52,12 +52,12 @@
       servertokens_ids: []
       servertokens: []
 
-  - debug: msg="{{item}}"
-    with_items: "{{ servertokens_cat.stdout_lines | split(" ") }}""
+  - debug: msg="{{item.split(' ')[0]}} {{item.split(' ')[1]}}"
+    with_items: "{{ servertokens_cat.stdout_lines }}"
 
 #  - set_fact:
 #      servertokens_ids: item
-#    with_items: "{{ servertokens_cat.stdout_lines | split(" ") }}""
+#    with_items: "{{ servertokens_cat.stdout_lines | split(" ") }
 
   - debug: msg={{iter}}
 
