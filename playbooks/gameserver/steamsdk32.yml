@@ -67,7 +67,7 @@
       servertokens_combined: []
   
   - set_fact:
-      servertokens_combined: '{{servertokens_combine|default({}) |combine({item.0: item.1})}}'
+      servertokens_combined: '{{servertokens_combined|default({}) |combine({item.0: item.1})}}'
     with_together:
     - "{{ servertokens_ids }}"
     - "{{ servertokens }}"
