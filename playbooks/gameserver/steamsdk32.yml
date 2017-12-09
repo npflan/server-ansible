@@ -36,3 +36,8 @@
     register: servertokens_cat
   
   - debug: msg={{servertokens_cat}}
+
+  - set_fact: 
+      servertokens: {{servertokens_cat.stdout.lines}}
+
+  - debug: msg={{servertokens}}
