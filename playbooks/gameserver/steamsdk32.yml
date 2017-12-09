@@ -102,10 +102,8 @@
 
   - debug: var=servertokens_combined
 
-  - set_fact: {"{{ item.1 }}" : "{{ servertokens_combined[""+item.0+':1'] }}"}
-    with_together:
-    - "{{ iter }}"
-    - "{{ ansible_play_batch | ipaddr('address') | ipaddr('int') }}"
+  - set_fact: {"{{ item }}" : "{{ servertokens_combined[""+item.0+':1'] }}"}
+    with_items: ansible_play_batch | ipaddr('address') | ipaddr('int')
 
   - debug: msg={{item | ipaddr('address') | ipaddr('int')}}
     with_items: ansible_play_batch
