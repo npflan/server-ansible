@@ -39,13 +39,14 @@
 
   - debug: msg={{ansible_play_batch}}
 
-  - set_fact:
-      iter:
-        - 1
+  - name: creating iterator
+    debug: msg="iterator dummy"
+    with_sequence: start=1 count={{ (ansible_play_batch | count) }}
+    register: iterator
 
   - set_fact:
-      iter: "{{iter}} + {{item}}"
-    with_sequence: "start=2 count={{ (ansible_play_batch | count) + 1}}"
+      iter: "{{ iterator.results | map(attribute='item') | list }}"
+    with_sequence: "start=2 count={{ (ansible_play_batch | count)}}"
   
   - debug: msg={{iter}}
 
