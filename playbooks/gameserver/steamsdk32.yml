@@ -2,16 +2,12 @@
 - hosts: npf_gameservers
   gather_facts: no
   tasks:
-  - name: Starting synchronization with repository server
-    command: rsync -a root@10.100.103.8:/srv/repo/ /srv/repo/
-    async: 18000
-    poll: 20
-
-  - name: changeing ownership of files
-    command: chown -R steam:steam /srv
-
   - name: Create sdk32
     file: path=/home/steam/.steam/sdk32 group=steam owner=steam state=directory
+    async: 64
+    poll: 2
 
   - name: link steamclient.so
     file: path=/home/steam/.steam/sdk32/steamclient.so group=steam owner=steam state=link src=/home/steam/.steam/steamcmd/linux32/steamclient.so
+    async: 64
+    poll: 2

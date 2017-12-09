@@ -1,8 +1,10 @@
 ---
 - hosts: npf_gameservers
   tasks:
-  - name: Starting synchronization with repository server
-    command: rsync -a root@10.100.103.8:/srv/repo/ /srv/repo/
+  - replace:
+      path: /srv/repo/csgo/csgo/cfg/server.cfg
+      regexp: '(sv_lan\s1)'
+      replace: 'sv_lan 0'
     async: 18000
     poll: 20
 
