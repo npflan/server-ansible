@@ -7,7 +7,32 @@
     async: 64
     poll: 2
 
+  - stat: path=/home/steam/.steam/steamcmd/linux32/steamclient.so
+    register: steamclient
+
+  - name: Create all steamcmd directory thingies
+    command: /usr/games/steamcmd +quit
+    become: true
+    become_user: steam
+    async: 64
+    poll: 2
+    when: steamclient.stat.exists == False
+
   - name: link steamclient.so
     file: path=/home/steam/.steam/sdk32/steamclient.so group=steam owner=steam state=link src=/home/steam/.steam/steamcmd/linux32/steamclient.so
     async: 64
     poll: 2
+
+  - stat: path=servertokens.txt
+    register: servertokens_stat
+    delegate_to: 127.0.0.1
+
+  - fail:
+      msg: "servertokens.txt doesn't exist!"
+    when: servertokens_stat.stat.exists == False
+
+  - name: Get all server tokens
+    local_action: cat servertokens.txt
+    register: servertokens_cat
+  
+  - debug: msg={{servertokens_cat}}
