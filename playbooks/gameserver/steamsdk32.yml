@@ -72,16 +72,11 @@
     register: servertokens_cat
   
   - debug: msg={{servertokens_cat.stdout_lines}}
-
-  - debug: msg={{ansible_play_batch}}
-
-  - set_fact:
-      iter: "{{ iterator.results | map(attribute='item') | list }}"
-    with_sequence: "start=2 count={{ (ansible_play_batch | count)}}"
   
   - set_fact:
       servertokens_ids: []
       servertokens: []
+      iterator: "{{(rackskabe_skip[rackskab|string]|int * servers_per_rack * gameservers_per_host) + (portnummer|int * gameservers_per_host)}}"
 
   - debug: msg="{{item.split(' ')[0]}} {{item.split(' ')[1]}}"
     with_items: "{{ servertokens_cat.stdout_lines }}"
@@ -102,10 +97,7 @@
 
   - debug: var=servertokens_combined
 
-  - set_fact: {"{{ item.0 }}" : "{{ servertokens_combined[''+item.1+':1'] }}"}
-    with_items: 
-    - "{{ ansible_play_batch | ipaddr('address') | ipaddr('int') }}"
-    - "{{ iter }}"
+  - set_fact: 
+      tokens_to_use: "{{ servertokens_combined[iterator|string+':1'] }}"
 
-  - debug: msg={{item | ipaddr('address') | ipaddr('int')}}
-    with_items: ansible_play_batch
+  - debug: var=tokens_to_use
