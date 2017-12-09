@@ -48,6 +48,17 @@
       iter: "{{ iterator.results | map(attribute='item') | list }}"
     with_sequence: "start=2 count={{ (ansible_play_batch | count)}}"
   
+  - set_fact:
+      servertokens_ids: []
+      servertokens: []
+
+  - debug: msg="{{item}}"
+    with_items: "{{ servertokens_cat.stdout_lines | split(" ") }}""
+
+#  - set_fact:
+#      servertokens_ids: item
+#    with_items: "{{ servertokens_cat.stdout_lines | split(" ") }}""
+
   - debug: msg={{iter}}
 
   - set_fact: {"{{ item.1 }}" : "{{ servertokens_cat.stdout_lines[item.0] }}"}
