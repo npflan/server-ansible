@@ -95,7 +95,7 @@
     - "{{ servertokens_ids }}"
     - "{{ servertokens }}"
 
-  - debug: var=servertokens_combined
+#  - debug: var=servertokens_combined
 
   - set_fact: 
       tokens_to_use: "{{ servertokens_combined[iterator|string+':1'] }}"
