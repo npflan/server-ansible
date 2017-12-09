@@ -108,4 +108,7 @@
       path: /srv/repo/csgo/csgo/cfg/servertoken1.cfg
       marker: "// {mark} ANSIBLE MANAGED BLOCK"
       content: "{{'sv_setsteamaccount '+item}}"
+      create: yes
+      owner: steam
+      group: steam
     with_items: tokens_to_use
