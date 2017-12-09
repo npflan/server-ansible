@@ -71,23 +71,23 @@
     local_action: command cat servertokens.txt
     register: servertokens_cat
   
-  - debug: msg={{servertokens_cat.stdout_lines}}
+ # - debug: msg={{servertokens_cat.stdout_lines}}
   
   - set_fact:
       servertokens_ids: []
       servertokens: []
       iterator: "{{(rackskabe_skip[rackskab|string]|int * servers_per_rack * gameservers_per_host) + (portnummer|int * gameservers_per_host)}}"
 
-  - debug: msg="{{item.split(' ')[0]}} {{item.split(' ')[1]}}"
-    with_items: "{{ servertokens_cat.stdout_lines }}"
+#  - debug: msg="{{item.split(' ')[0]}} {{item.split(' ')[1]}}"
+#    with_items: "{{ servertokens_cat.stdout_lines }}"
 
   - set_fact:
       servertokens_ids: "{{servertokens_ids}} + [ '{{item.split(\' \')[0]}}' ]"
       servertokens: "{{servertokens}} + [ '{{item.split(\' \')[1]}}' ]"
     with_items: "{{ servertokens_cat.stdout_lines }}"
 
-  - debug: var=servertokens_ids
-  - debug: var=servertokens
+#  - debug: var=servertokens_ids
+#  - debug: var=servertokens
   
   - set_fact:
       servertokens_combined: '{{servertokens_combined|default({}) |combine({item.0: item.1})}}'
@@ -102,3 +102,10 @@
 
   - debug: var=iterator
   - debug: var=tokens_to_use
+
+  - name: create servertokens.cfgs
+    blockinfile:
+      path: /srv/repo/csgo/csgo/cfg/servertoken1.cfg
+      marker: "// {mark} ANSIBLE MANAGED BLOCK"
+      content: "{{'sv_setsteamaccount '+item}}"
+    with_items: tokens_to_use
