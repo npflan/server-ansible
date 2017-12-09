@@ -40,8 +40,11 @@
   - debug: msg={{ansible_play_batch}}
 
   - set_fact:
+      iter: "1"
+
+  - set_fact:
       iter: "{{iter}} + {{item}}"
-    with_sequence: "start=1 count={{ (ansible_play_batch | count) + 1}}"
+    with_sequence: "start=2 count={{ (ansible_play_batch | count) + 1}}"
   
   - debug: msg={{iter}}
 
