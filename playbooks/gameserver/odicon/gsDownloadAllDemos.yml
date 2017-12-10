@@ -1,0 +1,30 @@
+---
+- hosts: npf_gameservers
+  gather_facts: no
+  tasks:
+  - name: Finding all Demos no older than a week
+    find:
+      age: -1w
+      paths: /srv/repo/csgo/csgo/
+      patterns: '*.dem'
+      size: 500k
+    register: demos
+
+  - set_fact:
+      demos_paths: "{{demos_paths|default([])}} + [ '{{item.path}}' ]"
+    with_items: "{{ demos.files }}"
+    when: demos.matched|int > 0
+
+#  - debug: var=demos_paths
+
+  - name: tar all found Demos
+    archive:
+      format: gz
+      dest: /root/demos.gz
+      path: "{{ demos_paths }}"
+    when: demos.matched|int > 0
+  - name: get it
+    fetch:
+      src: /root/demos.gz
+      dest: /root/demos
+    when: demos.matched|int > 0
