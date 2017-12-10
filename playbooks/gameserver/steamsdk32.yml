@@ -48,7 +48,7 @@
 
   - name: Create all steamcmd directory thingies
     command: /usr/games/steamcmd +quit
-    become: true
+    become: True
     become_user: steam
     async: 64
     poll: 2
@@ -61,6 +61,7 @@
 
   - stat: path=servertokens.txt
     register: servertokens_stat
+    run_once: True
     delegate_to: 127.0.0.1
 
   - fail:
@@ -69,21 +70,20 @@
 
   - name: Get all server tokens
     local_action: command cat servertokens.txt
+    run_once: True
     register: servertokens_cat
   
  # - debug: msg={{servertokens_cat.stdout_lines}}
   
   - set_fact:
-      servertokens_ids: []
-      servertokens: []
       iterator: "{{(rackskabe_skip[rackskab|string]|int * servers_per_rack * gameservers_per_host) + (portnummer|int * gameservers_per_host)}}"
 
 #  - debug: msg="{{item.split(' ')[0]}} {{item.split(' ')[1]}}"
 #    with_items: "{{ servertokens_cat.stdout_lines }}"
 
   - set_fact:
-      servertokens_ids: "{{servertokens_ids}} + [ '{{item.split(\' \')[0]}}' ]"
-      servertokens: "{{servertokens}} + [ '{{item.split(\' \')[1]}}' ]"
+      servertokens_ids: "{{servertokens_ids|default([])}} + [ '{{item.split(\' \')[0]}}' ]"
+      servertokens: "{{servertokens|default([])}} + [ '{{item.split(\' \')[1]}}' ]"
     with_items: "{{ servertokens_cat.stdout_lines }}"
 
 #  - debug: var=servertokens_ids
