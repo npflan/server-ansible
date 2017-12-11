@@ -16,7 +16,7 @@ addresses=$(nmap --min-parallelism 50 --min-rate 50 -p 22 10.100.103,106,107.11-
 output="{\n"
 IFSBAK=$IFS
 IFS="HEST"
-output="${output} `cat $BASEDIR/hosts_*`\n"
+output="${output} `cat $BASEDIR/hostfiles/hosts_*`\n"
 output="${output}  \"npf_gameservers\": [\n"
 
 while read -r address; do
