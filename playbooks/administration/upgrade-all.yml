@@ -1,0 +1,16 @@
+---
+- hosts: npf_gameservers
+  gather_facts: no
+  tasks:
+  - name: update apt cache
+    apt: 
+      update_cache: yes
+
+  - name: apt upgrade
+    apt:
+      upgrade: full
+
+  - name: apt autoclean og remove
+    apt:
+      autoclean: yes
+      autoremove: yes
