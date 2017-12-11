@@ -1,0 +1,13 @@
+---
+- hosts: npf_gameservers
+  tasks:
+#  - name: ensure Zabbix-agent is installed
+#    apt: name=zabbix-agent update_cache=yes
+  - name: ensure Server config is set
+    raw: sed -i 's/Server\=127.0.0.1/Server\=10.100.10.4/g' /etc/zabbix/zabbix_agentd.conf
+  - name: ensure ServerActive config is set
+    raw: sed -i 's/ServerActive\=127.0.0.1/ServerActive\=10.100.10.4/g' /etc/zabbix/zabbix_agentd.conf
+  - name: ensure Hostname is NOT set
+    raw: sed -i 's/Hostname\=Zabbix server/\#Hostname\=Zabbix server/g' /etc/zabbix/zabbix_agentd.conf
+  - name: restart Zabbix-agent.service
+    raw: systemctl restart zabbix-agent.service
