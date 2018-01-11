@@ -1,0 +1,20 @@
+---
+- hosts: npf_gameservers
+  tasks:
+    - include_vars: users.yml
+    - name: Create Account - Kaergaard
+      user:
+        name: kaergaard
+        state: present
+        comment: Kristian Dahl Kaergaard
+        shell: /bin/bash
+        force: yes
+        groups: 
+          - adm
+          - sudo
+      with_items: '{{users}}'
+    - name: Add Authorized Key - {{username}}
+      authorized_key:
+        user: kaergaard
+        state: present
+        key: "{{ lookup('file', '/etc/ansible/playbooks/user/public_keys/kaergaard') }}"

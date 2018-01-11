@@ -1,0 +1,4 @@
+--
+users:
+  - username: kaergaard
+    use_sudo: yes
