@@ -1,0 +1,38 @@
+---
+- hosts: npf_gameservers
+  gather_facts: yes
+  tasks:
+  - name: henter hostname
+    command: cat /etc/hostname
+    async: 0
+    poll: 15
+    register: hostname_result
+
+  - set_fact:
+      hostname: "{{ hostname_result.stdout }}"
+
+  - debug:
+      var: "{{ hostname }}"
+
+  - name: hvis hostname ikke er korrekt
+    include_tasks: asset-set-hostname-from-ilo.yml
+    when: hostname is not defined or hostname == "unassigned" or hostname == "ubuntu"
+
+  - copy:
+      content: "{{ hostname }}"
+      dest: /tmp/hostname
+
+  - debug:
+      var: hostvars[inventory_hostname]
+
+  - copy:
+      content: "{{ ansible_eth0.macaddress }}"
+      dest: /tmp/mac
+
+  - fetch:
+      src: /tmp/hostname
+      dest: /tmp/hostnames
+
+  - fetch:
+      src: /tmp/mac
+      dest: /tmp/hostnames
