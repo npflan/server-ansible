@@ -1,7 +1,0 @@
----
-- hosts: npf_gameservers
-  tasks:
-  - name: List number of physical cores
-    shell: "[[ $(uname) = 'Darwin' ]] && sysctl -n hw.physicalcpu_max || lscpu -p | egrep -v '^#' | sort -u -t, -k 2,4 | wc -l"
-    register: physCores
-  - debug: msg="{{ physCores.stdout | replace('\n', '') | replace('\r', '') }}"

@@ -1,0 +1,114 @@
+---
+- hosts: npf_gameservers
+  gather_facts: yes
+  vars:
+    servers_per_rack: 32
+    rackskabe_skip:
+      "103": 0 # rack start
+      "106": 1 # rack start + 103
+      "107": 3 # rack start + 103 + 106
+    gameservers_per_host: 1
+  
+  tasks:
+  - name: listen for cdp
+    shell: timeout 60 tcpdump -nn -v -i eth0 -s 1500 -c 1 'ether[20:2] == 0x2000'|awk 'match($0, /GigabitEthernet1\/([0-9]{1,2})/,a){print a[1]}'
+    async: 60
+    poll: 15
+    register: tcpdump_command
+  - debug: msg={{tcpdump_command.stdout}}
+  - set_fact:
+      portnummer: "{{ tcpdump_command.stdout|int }}"
+      cacheable: true
+    when:  tcpdump_command.stdout|int(-1) != -1 
+  - debug: msg={{tcpdump_command.stdout|int(-1)}}
+#  - debug: msg={{portnummer}}
+  - name: check if portnummer is set
+    fail: msg="portnummer is undefined"
+    when: portnummer is not defined
+
+
+  - name: checking ip address
+    set_fact:
+      rackskab: "{{ ansible_eth0.ipv4.address.split('.')[2] }}"
+      cacheable: true
+    when: ansible_eth0.ipv4.address.split('.')[2] in ["103","106","107"]
+  - debug: msg={{ ansible_eth0.ipv4.address.split('.')[2] in ["103","106","107"]}}
+  - debug: msg={{ rackskab }}
+  - name: check if rackskab is defined
+    fail: msg="rackskab is undefined"
+    when: rackskab is not defined
+
+  - name: Create sdk32
+    file: path=/home/steam/.steam/sdk32 group=steam owner=steam state=directory
+    async: 64
+    poll: 2
+
+  - stat: path=/home/steam/.steam/steamcmd/linux32/steamclient.so
+    register: steamclient
+
+  - name: Create all steamcmd directory thingies
+    command: /usr/games/steamcmd +quit
+    become: True
+    become_user: steam
+    async: 64
+    poll: 2
+    when: steamclient.stat.exists == False
+
+  - name: link steamclient.so
+    file: path=/home/steam/.steam/sdk32/steamclient.so group=steam owner=steam state=link src=/home/steam/.steam/steamcmd/linux32/steamclient.so
+    async: 64
+    poll: 2
+
+  - stat: path=servertokens.txt
+    register: servertokens_stat
+    run_once: True
+    delegate_to: 127.0.0.1
+
+  - fail:
+      msg: "servertokens.txt doesn't exist!"
+    when: servertokens_stat.stat.exists == False
+
+  - name: Get all server tokens
+    local_action: command cat servertokens.txt
+    run_once: True
+    register: servertokens_cat
+  
+ # - debug: msg={{servertokens_cat.stdout_lines}}
+  
+  - set_fact:
+      iterator: "{{(rackskabe_skip[rackskab|string]|int * servers_per_rack * gameservers_per_host) + (portnummer|int * gameservers_per_host)}}"
+
+#  - debug: msg="{{item.split(' ')[0]}} {{item.split(' ')[1]}}"
+#    with_items: "{{ servertokens_cat.stdout_lines }}"
+
+  - set_fact:
+      servertokens_ids: "{{servertokens_ids|default([])}} + [ '{{item.split(\' \')[0]}}' ]"
+      servertokens: "{{servertokens|default([])}} + [ '{{item.split(\' \')[1]}}' ]"
+    with_items: "{{ servertokens_cat.stdout_lines }}"
+
+#  - debug: var=servertokens_ids
+#  - debug: var=servertokens
+  
+  - set_fact:
+      servertokens_combined: '{{servertokens_combined|default({}) |combine({item.0: item.1})}}'
+    with_together:
+    - "{{ servertokens_ids }}"
+    - "{{ servertokens }}"
+
+#  - debug: var=servertokens_combined
+
+  - set_fact: 
+      tokens_to_use: "{{ servertokens_combined[iterator|string+':1'] }}"
+
+  - debug: var=iterator
+  - debug: var=tokens_to_use
+
+  - name: create servertokens.cfgs
+    blockinfile:
+      path: /srv/repo/csgo/csgo/cfg/servertoken1.cfg
+      marker: "// {mark} ANSIBLE MANAGED BLOCK"
+      content: "{{'sv_setsteamaccount '+item}}"
+      create: yes
+      owner: steam
+      group: steam
+    with_items: [ "{{tokens_to_use}}" ]

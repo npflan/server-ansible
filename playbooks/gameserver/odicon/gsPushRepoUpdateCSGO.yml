@@ -1,0 +1,12 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - replace:
+      path: /srv/repo/csgo/csgo/cfg/server.cfg
+      regexp: '(sv_lan\s1)'
+      replace: 'sv_lan 0'
+    async: 18000
+    poll: 20
+
+  - name: changeing ownership of files
+    command: chown -R steam:steam /srv

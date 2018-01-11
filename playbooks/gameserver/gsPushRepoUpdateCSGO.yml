@@ -1,5 +1,5 @@
 ---
-- hosts: csgo
+- hosts: npf_gameservers
   tasks:
   - name: Starting synchronization with repository server
     command: rsync -a root@10.100.103.8:/srv/repo/ /srv/repo/
