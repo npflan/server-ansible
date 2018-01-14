@@ -2,12 +2,12 @@
 - hosts: npf_gameservers
   gather_facts: yes
   vars:
-    servers_per_rack: 32
+    servers_per_rack: 16
     rackskabe_skip:
       "103": 0 # rack start
       "106": 1 # rack start + 103
       "107": 3 # rack start + 103 + 106
-    gameservers_per_host: 1
+    gameservers_per_host: 2
   
   tasks:
   - name: listen for cdp
