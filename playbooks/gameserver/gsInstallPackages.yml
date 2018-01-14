@@ -14,4 +14,6 @@
     apt:
       name: "steamcmd"
   - name: Updateing SteamCMD
-    command: steamcmd +exit
+    command: /usr/games/steamcmd +exit
+    become: true
+    become_user: steam

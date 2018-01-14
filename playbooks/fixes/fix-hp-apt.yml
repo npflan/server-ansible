@@ -1,0 +1,48 @@
+---
+- hosts: npf_gameservers
+  gather_facts: false
+  tasks:
+
+  - name: Downloader hpPublicKey1024.pub
+    get_url:
+      url: http://downloads.linux.hpe.com/SDR/hpPublicKey1024.pub
+      dest: /temp/hpPublicKey1024.pub
+      mode: 0440
+    become: true
+
+  - name: Downloader hpPublicKey2048.pub
+    get_url:
+      url: http://downloads.linux.hpe.com/SDR/hpPublicKey2048.pub
+      dest: /temp/hpPublicKey2048.pub
+      mode: 0440
+    become: true
+
+  - name: Downloader hpPublicKey2048_key1.pub
+    get_url:
+      url: http://downloads.linux.hpe.com/SDR/hpPublicKey2048_key1.pub
+      dest: /temp/hpPublicKey2048_key1.pub
+      mode: 0440
+    become: true
+
+  - name: Downloader hpePublicKey2048_key1.pub
+    get_url:
+      url: http://downloads.linux.hpe.com/SDR/hpePublicKey2048_key1.pub
+      dest: /temp/hpePublicKey2048_key1.pub
+      mode: 0440
+    become: true  
+
+  - name: Install hpPublicKey1024.pub
+    command: apt-key add /temp/hpPublicKey1024.pub
+    become: true  
+
+  - name: Install hpPublicKey2048.pub
+    command: apt-key add /temp/hpPublicKey2048.pub
+    become: true  
+
+  - name: Install hpPublicKey2048_key1.pub
+    command: apt-key add /temp/hpPublicKey2048_key1.pub
+    become: true  
+
+  - name: Install hpePublicKey2048_key1
+    command: apt-key add /temp/hpePublicKey2048_key1.pub
+    become: true
