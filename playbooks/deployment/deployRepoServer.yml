@@ -77,11 +77,11 @@
     become: yes
     become_user: npfuser
     become_method: sudo
-    shell: steamcmd +login anonymous +force_install_dir /srv/csgo +app_update 740 validate +quit
+    shell: /usr/games/steamcmd +login anonymous +force_install_dir /srv/csgo +app_update 740 validate +quit
 
   - name: "Download and Update Counter-Strike: Source"
     become: yes
     become_user: npfuser
     become_method: sudo
-    shell: steamcmd +login anonymous +force_install_dir /srv/css +app_update 232330 validate +quit
+    shell: /usr/games/steamcmd +login anonymous +force_install_dir /srv/css +app_update 232330 validate +quit
 
