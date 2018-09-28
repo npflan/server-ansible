@@ -1,0 +1,67 @@
+---
+- hosts: npf_gameservers
+  gather_facts: no
+  tasks:
+  - name: update apt cache
+    apt: 
+      update_cache: yes
+
+  - name: apt upgrade
+    apt:
+      name: curl
+      state: present
+
+  - name: apt autoclean og remove
+    apt:
+      autoclean: yes
+      autoremove: yes
+
+  - name: add user prometheus
+    user:
+      name: prometheus
+      group: prometheus
+      shell: /bin/false
+      append: yes
+      create_home: no
+
+  - name: add user node_exporter
+    user:
+      name: node_exporter
+      group: node_exporter
+      shell: /bin/false
+      append: yes
+      create_home: no
+
+  - name: Creates node_exporter directory
+    file:
+      path: /etc/node_exporter
+      state: directory
+      owner: node_exporter
+      group: node_exporter
+      mode: 0775
+
+  - name: Download file with check (sha256)
+    get_url:
+      url: https://github.com/prometheus/node_exporter/releases/download/v0.16.0/node_exporter-0.16.0.linux-amd64.tar.gz
+      dest: /tmp/node_exporter.tar.gz
+      checksum: sha256:e92a601a5ef4f77cce967266b488a978711dabc527a720bea26505cba426c029
+
+    unarchive:
+      src: /tmp/node_exporter.tar.gz
+      dest: /tmp/node_exporter
+
+  - name: copy node_exporter binaries
+    command: cp /tmp/node_exporter/node_exporter /usr/local/bin/node_exporter
+  - command: chown node_exporter:node_exporter /usr/local/bin/node_exporter
+
+  - name: copy node_exporter systemd files
+    copy:
+      src: assets/node_exporter.service
+      dest: /etc/systemd/system/node_exporter.service
+      owner: root
+      group: root
+
+  - name: reload daemond
+    command: systemctl daemon-reload
+  - command: systemctl enable node_exporter
+  - command: systemctl start node_exporter
