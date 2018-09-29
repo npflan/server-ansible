@@ -11,6 +11,16 @@
       name: curl
       state: present
 
+  - name: Ensure group "prometheus" exists
+    group:
+      name: prometheus
+      state: present
+
+  - name: Ensure group "node_exporter" exists
+    group:
+      name: prometheus
+      state: present
+
   - name: add user prometheus
     user:
       name: prometheus
