@@ -71,4 +71,4 @@
   - name: reload daemond
     command: systemctl daemon-reload
   - command: systemctl enable node_exporter
-  - command: systemctl start node_exporter
+  - command: systemctl restart node_exporter
