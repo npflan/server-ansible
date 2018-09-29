@@ -8,23 +8,32 @@ if [ "$1" = '--host' ]; then
   exit 0
 fi
 
-# 10.100.103.95 minecraft
-# 10.100.107.137 raspberrypi
-
-addresses=$(nmap --min-parallelism 50 --min-rate 50 -p 22 10.100.103,106,107.11-250 --open --exclude 10.100.103.8 | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}")
+addresses=$(nmap --min-parallelism 50 --min-rate 50 -p 22 10.100.101-103.50-250 --open| grep -v "10.100.101.223" | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}")
 
 output="{\n"
-IFSBAK=$IFS
-IFS="HEST"
-output="${output} `cat $BASEDIR/hostfiles/hosts_*`\n"
-output="${output}  \"npf_gameservers\": [\n"
+output="${output} `cat ${BASEDIR}/hostfiles/hosts_*`\n"
+output="${output}  \"gameservers-all\": [\n"
 
 while read -r address; do
   output="${output}    \"${address}\",\n"
 done <<< "$addresses"
 
+output="${output} ],"
+
+
+output="${output}\n  \"gameservers-current-rack\": [\n"
+
+# Information om nucærende rack
+rack=$(ip -f inet address | grep 10.100 | cut -d. -f 3)
+rackServers=$(printf -- "%s\n" "${addresses[@]}" | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.$rack\.[0-9]{1,3}")
+
+
+while read -r address; do
+  output="${output}    \"${address}\",\n"
+done <<< "$rackServers"
+
 output="${output} ]\n}"
+
 
 #echo -e `echo $output | sed 's/\(.*\),/\1/'`
 echo -e $output
-IFS=$IFSBAK
