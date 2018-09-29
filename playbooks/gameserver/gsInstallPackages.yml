@@ -1,5 +1,5 @@
 ---
-- hosts: gameservers-current-rack
+- hosts: npf_gameservers-current-rack
   tasks:
   - name: Install screen
     apt:

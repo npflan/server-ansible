@@ -1,5 +1,5 @@
 ---
-- hosts: gameservers-current-rack
+- hosts: npf_gameservers-current-rack
   tasks:
   - name: Creating directory for repository
     command: mkdir -p /srv/repo

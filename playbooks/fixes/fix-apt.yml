@@ -1,5 +1,5 @@
 ---
-- hosts: gameservers-all
+- hosts: npf_gameservers-all
   tasks:
   - name: henter lige en ny sources.list
     copy:

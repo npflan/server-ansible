@@ -12,7 +12,7 @@ addresses=$(nmap --min-parallelism 50 --min-rate 50 -p 22 10.100.101-103.50-250 
 
 output="{\n"
 output="${output} `cat ${BASEDIR}/hostfiles/hosts_*`\n"
-output="${output}  \"gameservers-all\": [\n"
+output="${output}  \"npf_gameservers\": [\n"
 
 while read -r address; do
   output="${output}    \"${address}\",\n"
