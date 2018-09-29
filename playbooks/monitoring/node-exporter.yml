@@ -1,5 +1,5 @@
 ---
-- hosts: npf_gameservers
+- hosts: gameservers-all
   gather_facts: no
   tasks:
   - name: update apt cache
