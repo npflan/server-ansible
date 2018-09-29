@@ -21,7 +21,7 @@ done <<< "$addresses"
 output="${output} ],"
 
 
-output="${output}\n  \"gameservers-current-rack\": [\n"
+output="${output}\n  \"npf_gameservers-current-rack\": [\n"
 
 # Information om nucærende rack
 rack=$(ip -f inet address | grep 10.100 | cut -d. -f 3)
