@@ -59,7 +59,6 @@
       copy: no
       src: /tmp/node_exporter.tar.gz
       dest: /tmp/node_exporter
-      remote_src: true
 
   - name: copy node_exporter binaries
     command: cp /tmp/node_exporter/node_exporter /usr/local/bin/node_exporter
