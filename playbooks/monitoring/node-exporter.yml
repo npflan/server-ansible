@@ -18,7 +18,7 @@
 
   - name: Ensure group "node_exporter" exists
     group:
-      name: prometheus
+      name: node_exporter
       state: present
 
   - name: add user prometheus
