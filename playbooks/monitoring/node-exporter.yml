@@ -58,7 +58,7 @@
   - command: tar -zxvf /tmp/node_exporter.tar.gz -C /tmp/
 
   - name: copy node_exporter binaries
-    command: cp /tmp/node_exporter*/node_exporter /usr/local/bin/node_exporter
+    command: cp /tmp/node_exporter-0.16.0.linux-amd64/node_exporter /usr/local/bin/node_exporter
   - command: chown node_exporter:node_exporter /usr/local/bin/node_exporter
 
   - name: copy node_exporter systemd files
