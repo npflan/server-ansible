@@ -7,14 +7,17 @@
   - name: Creating directory for logs
     file: path=/srv/logs state=directory
 
-  - synchronize:
-     mode: pull
+  - name: Syncing /srv directory
+    synchronize:
      src: /srv/
      dest: /srv
-    delegate_to: delegate.host
 
-  - name: changeing ownership of files
-    command: chown -R steam:steam /srv
+  - name: Updateing directory owner on /srv
+    file:
+     path: /srv
+     owner: steam
+     group: steam
+     recurse: yes
 
   - name: Install screen
     apt:
