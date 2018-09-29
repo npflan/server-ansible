@@ -42,7 +42,7 @@
     when: rackskab is not defined
 
   - name: finding my scope placement
-    local_action: command /root/ipincrementer {{rackskabe_start[""+rackskab]}} {{gameservers_per_host * portnummer|int}}
+    local_action: command /root/ansible/tools/ipincrementer {{rackskabe_start[""+rackskab]}} {{gameservers_per_host * portnummer|int}}
     register: netid_command
   - debug: msg={{netid_command}}
 
@@ -56,7 +56,7 @@
     when: netid is not defined
     
   - name: finding all my ips
-    local_action: command /root/iplister {{netid}}/{{netid_maskbit}}
+    local_action: command /root/ansible/tools/iplister {{netid}}/{{netid_maskbit}}
     register: iplist_command
 
   - debug: msg={{iplist_command}}
