@@ -46,7 +46,7 @@
       dest: /tmp/node_exporter.tar.gz
       checksum: sha256:e92a601a5ef4f77cce967266b488a978711dabc527a720bea26505cba426c029
 
-    unarchive:
+  - unarchive:
       src: /tmp/node_exporter.tar.gz
       dest: /tmp/node_exporter
 
