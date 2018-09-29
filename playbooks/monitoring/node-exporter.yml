@@ -55,8 +55,8 @@
       path: /etc/node_exporter
       state: directory
 
-
   - unarchive:
+      copy: no
       src: /tmp/node_exporter.tar.gz
       dest: /tmp/node_exporter
       remote_src: true
