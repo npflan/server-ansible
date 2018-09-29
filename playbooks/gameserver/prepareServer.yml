@@ -1,0 +1,34 @@
+---
+- hosts: npf_gameservers-current-rack
+  tasks:
+  - name: Creating directory for repository
+    file: path=/srv/csgo state=directory
+
+  - name: Creating directory for logs
+    file: path=/srv/logs state=directory
+
+  - synchronize:
+     mode: pull
+     src: /srv/
+     dest: /srv
+    delegate_to: delegate.host
+
+  - name: changeing ownership of files
+    command: chown -R steam:steam /srv
+
+  - name: Install screen
+    apt:
+      name: "screen"
+  - name: Accept SteamCMD License
+    debconf:
+      name: "steamcmd"
+      question: "steam/question"
+      value: "I AGREE"
+      vtype: "select"
+  - name: Install SteamCMD
+    apt:
+      name: "steamcmd"
+  - name: Updateing SteamCMD
+    command: /usr/games/steamcmd +exit
+    become: true
+    become_user: steam
