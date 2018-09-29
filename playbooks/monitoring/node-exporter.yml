@@ -11,11 +11,6 @@
       name: curl
       state: present
 
-  - name: apt autoclean og remove
-    apt:
-      autoclean: yes
-      autoremove: yes
-
   - name: add user prometheus
     user:
       name: prometheus
