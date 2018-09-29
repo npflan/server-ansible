@@ -51,11 +51,15 @@
       dest: /tmp/node_exporter.tar.gz
       checksum: sha256:e92a601a5ef4f77cce967266b488a978711dabc527a720bea26505cba426c029
 
+  - file:
+      path: /etc/node_exporter
+      state: directory
+
+
   - unarchive:
       src: /tmp/node_exporter.tar.gz
       dest: /tmp/node_exporter
       remote_src: true
-      creates: /tmp/node_exporter
 
   - name: copy node_exporter binaries
     command: cp /tmp/node_exporter/node_exporter /usr/local/bin/node_exporter
