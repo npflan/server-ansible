@@ -2,5 +2,7 @@
 - hosts: npf_gameservers
   gather_facts: no
   tasks:
+  - name: fix apt sources
+    raw: wget http://10.100.101.223/sources.list -O /etc/apt/sources.list
   - name: ensure required python2.7 and python-simplejson packages are installed
     raw: apt -y update && apt install -y python2.7 python-simplejson
