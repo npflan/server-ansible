@@ -1,8 +1,48 @@
 ---
 - hosts: npf_gameservers-current-rack
   tasks:
-  - name: ensure required python2.7 and python-simplejson packages are installed
-    raw: apt -y update && apt install -y python2.7 python-simplejson
+
+  - name: "FIX: Ubuntu 16.04 LTS dosen't come with certain modules, required by ansible"
+    become: yes
+    become_user: root
+    become_method: sudo
+    raw: apt-get install python-minimal aptitude -y
+
+  - name: "Accept SteamCMD license"
+    become: yes
+    become_user: root
+    become_method: sudo
+    debconf:
+      name: "steamcmd"
+      question: "steam/question"
+      value: "I AGREE"
+      vtype: "select"
+
+  - name: "Update, Upgrade, Remove and Clean APT Packages"
+    become: yes
+    become_user: root
+    become_method: sudo
+    apt:
+      update_cache: yes
+      upgrade: full
+      cache_valid_time: 86400 #one day
+      state: latest
+
+  - name: "Install screen APT Package"
+    become: yes
+    become_user: root
+    become_method: sudo
+    apt:
+      name: screen
+      state: latest
+
+  - name: "Install SteamCMD APT Package"
+    become: yes
+    become_user: root
+    become_method: sudo
+    apt:
+      name: steamcmd
+      state: latest
 
   - name: Creating directory for repository
     file: path=/srv/csgo state=directory
@@ -22,18 +62,6 @@
      group: steam
      recurse: yes
 
-  - name: Install screen
-    apt:
-      name: "screen"
-  - name: Accept SteamCMD License
-    debconf:
-      name: "steamcmd"
-      question: "steam/question"
-      value: "I AGREE"
-      vtype: "select"
-  - name: Install SteamCMD
-    apt:
-      name: "steamcmd"
   - name: Updateing SteamCMD
     command: /usr/games/steamcmd +exit
     become: true
