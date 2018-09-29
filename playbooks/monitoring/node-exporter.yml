@@ -55,10 +55,7 @@
       path: /etc/node_exporter
       state: directory
 
-  - unarchive:
-      copy: no
-      src: /tmp/node_exporter.tar.gz
-      dest: /tmp/node_exporter
+  - command: tar -zxvf /tmp/node_exporter.tar.gz
 
   - name: copy node_exporter binaries
     command: cp /tmp/node_exporter/node_exporter /usr/local/bin/node_exporter
