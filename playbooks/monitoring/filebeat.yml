@@ -1,0 +1,28 @@
+---
+- hosts: npf_gameservers
+  gather_facts: no
+  tasks:
+  - name: update apt cache
+    apt: 
+      update_cache: yes
+
+  - name: apt upgrade
+    apt:
+      name: curl
+      state: present
+
+  - name: download filebeat
+    command: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.4.1-amd64.deb
+  
+  - name: install filebeat
+    command: dpkg -i filebeat-6.4.1-amd64.deb
+
+  - name: copy filebeat.yml config files
+    copy:
+      src: assets/filebeat.yml
+      dest: /etc/filebeat/filebeat.yml
+      owner: root
+      group: root
+
+  - name: start filebeat
+    command: service filebeat start
