@@ -149,6 +149,11 @@ output.elasticsearch:
   #username: "elastic"
   #password: "changeme"
 
+setup.template:
+  name: "filebeat"
+  pattern: "filebeat-*"
+  enabled: false
+
 #----------------------------- Logstash output --------------------------------
 #output.logstash:
   # The Logstash hosts
