@@ -25,4 +25,4 @@
       group: root
 
   - name: start filebeat
-    command: service filebeat start
+    command: service filebeat restart
