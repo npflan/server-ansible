@@ -21,7 +21,7 @@ filebeat.inputs:
 - type: log
 
   # Change to true to enable this input configuration.
-  enabled: false
+  enabled: true
 
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
@@ -29,7 +29,7 @@ filebeat.inputs:
 
   # Exclude lines. A list of regular expressions to match. It drops the lines that are
   # matching any regular expression from the list.
-  #exclude_lines: ['^DBG']
+  exclude_lines: ['^DBG']
 
   # Include lines. A list of regular expressions to match. It exports the lines that are
   # matching any regular expression from the list.
@@ -37,7 +37,7 @@ filebeat.inputs:
 
   # Exclude files. A list of regular expressions to match. Filebeat drops the files that
   # are matching any regular expression from the list. By default, no files are dropped.
-  #exclude_files: ['.gz$']
+  exclude_files: ['.gz$']
 
   # Optional additional fields. These fields can be freely picked
   # to add additional information to the crawled log files for filtering
