@@ -9,7 +9,8 @@
      delete: yes
      recursive: yes
      rsync_opts:
-      - "--exclude=*.dem *.log *.txt"
+      - "--exclude=/srv/csgo/csgo/*.dem"
+      - "--exclude=/srv/csgo/csgo/*.txt"
       - "--exclude=/srv/csgo/csgo/cfg/server.cfg"
 
   - name: Check if servertype exists
