@@ -20,6 +20,12 @@ filebeat.inputs:
 
 - type: log
   paths:
+    - /srv/logs/csgo/*/*.log
+  fields:
+    pipeline: csgo_gamelogs
+
+- type: log
+  paths:
     - /var/log/kern.log
   include_lines: ['EDAC MC0:']
   fields:
