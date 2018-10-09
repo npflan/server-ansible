@@ -19,10 +19,15 @@ filebeat.inputs:
 # Below are the input specific configurations.
 
 - type: log
+  paths:
+    - /var/log/kern.log
+  include_lines: ['EDAC MC0:']
+  fields:
+    pipeline: ecc_pipeline
 
+- type: log
   # Change to true to enable this input configuration.
   enabled: true
-
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
     - /var/log/*.log
@@ -142,6 +147,7 @@ setup.kibana:
 output.elasticsearch:
   # Array of hosts to connect to.
   hosts: ["es-cluster-elasticsearch-client.default.svc.npf.dk:9200"]
+  pipeline: '%{[pipeline]}'
   index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
 
   # Optional protocol and basic auth credentials.
