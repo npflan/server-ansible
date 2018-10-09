@@ -6,6 +6,44 @@
     synchronize:
      src: /srv/csgo/
      dest: /srv/csgo
+     delete: yes
+     recursive: yes
+     rsync_opts:
+      - "--exclude=*.dem *.log *.txt"
+      - "--exclude=/srv/csgo/csgo/cfg/server.cfg"
+
+  - name: Check if servertype exists
+    stat:
+     path: /srv/gametype.config
+    register: gametype_stats
+
+  - name: Createing servertype
+    shell: |
+      printf 'csgo5v5' > /srv/gametype.config
+    when: gametype_stats.stat.exists == False
+
+  - name: Getting remote server type
+    slurp:
+     src: /srv/gametype.config
+    register: gstype
+
+#  - debug:
+#     msg: "{{ gstype['content'] | b64decode }}"
+
+  - name: Updatering config for CSGO 5v5
+    synchronize:
+     src: /srv/configs/5v5.cfg
+     dest: /srv/csgo/csgo/cfg/server.cfg
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo5v5"'
+
+
+  - name: Updateing config for CSGO 2v2
+    synchronize:
+     src: /srv/configs/2v2.cfg
+     dest: /srv/csgo/csgo/cfg/server.cfg
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo2v2"'
 
   - name: Updateing directory owner on /srv
     file:

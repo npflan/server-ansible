@@ -1,5 +1,6 @@
 ---
-- hosts: npf_gameservers-current-rack
+#- hosts: npf_gameservers-current-rack
+- hosts: npf_gameservers
   tasks:
 
   - name: "FIX: Ubuntu 16.04 LTS dosen't come with certain modules, required by ansible"
@@ -54,6 +55,8 @@
     synchronize:
      src: /srv/
      dest: /srv
+     delete: yes
+     recursive: yes
 
   - name: Updateing directory owner on /srv
     file:
