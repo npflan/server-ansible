@@ -147,7 +147,7 @@ setup.kibana:
 output.elasticsearch:
   # Array of hosts to connect to.
   hosts: ["es-cluster-elasticsearch-client.default.svc.npf.dk:9200"]
-  pipeline: '%{[pipeline]}'
+  pipeline: '%{[fields.pipeline]}'
   index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
 
   # Optional protocol and basic auth credentials.
