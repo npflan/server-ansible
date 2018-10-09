@@ -1,0 +1,27 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: checking ip
+    debug: var=ansible_default_ipv4.address
+  - name: checking gw
+    debug: var=ansible_default_ipv4.gateway
+  - name: set variable
+    set_fact:
+      start_hostname: "ip-"
+      join_hostname: "-"
+      part1_hostname: "{{ ansible_default_ipv4.address.split('.')[2] }}"
+      part2_hostname: "{{ ansible_default_ipv4.address.split('.')[3] }}"
+  - name: set new hostname
+    set_fact:
+      new_hostname: "{{ start_hostname + part1_hostname + join_hostname + part2_hostname }}"
+  - name: checking hostnames
+    debug: var=new_hostname
+  - name: update hostname file
+    copy:
+      content: "{{ new_hostname }}"
+      dest: /etc/hostname
+    when: ansible_hostname == "unassigned"
+  - name: set new hostname
+    command: hostname -F /etc/hostname
+    when: ansible_hostname == "unassigned"
+#    when: ansible_hostname == "unassigned"

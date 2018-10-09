@@ -26,3 +26,6 @@
 
   - name: start filebeat
     command: service filebeat restart
+
+  - name: start filebeat automatically
+    command: update-rc.d filebeat defaults
