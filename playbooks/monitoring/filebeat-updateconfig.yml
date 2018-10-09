@@ -1,0 +1,13 @@
+---
+- hosts: npf_gameservers
+  gather_facts: no
+  tasks:
+  - name: copy filebeat.yml config files
+    copy:
+      src: assets/filebeat.yml
+      dest: /etc/filebeat/filebeat.yml
+      owner: root
+      group: root
+
+  - name: restart filebeat
+    command: service filebeat restart
