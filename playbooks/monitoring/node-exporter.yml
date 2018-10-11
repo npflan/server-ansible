@@ -1,5 +1,5 @@
 ---
-- hosts: npf_gameservers
+- hosts: npf_gameservers_all
   gather_facts: no
   tasks:
   - name: update apt cache
@@ -56,6 +56,9 @@
       state: directory
 
   - command: tar -zxvf /tmp/node_exporter.tar.gz -C /tmp/
+ 
+  - command: service node_exporter stop
+    ignore_errors: yes
 
   - name: copy node_exporter binaries
     command: cp /tmp/node_exporter-0.16.0.linux-amd64/node_exporter /usr/local/bin/node_exporter

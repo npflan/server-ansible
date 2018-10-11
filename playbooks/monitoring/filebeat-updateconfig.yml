@@ -9,5 +9,9 @@
       owner: root
       group: root
 
-  - name: restart filebeat
-    command: service filebeat restart
+  - name: reload daemons
+    command: systemctl daemon-reload
+
+  - name: make sure filebeat is started
+    service: name=filebeat state=restarted enabled=yes
+

@@ -8,7 +8,7 @@ if [ "$1" = '--host' ]; then
   exit 0
 fi
 
-addresses=$(dig -t SRV telemetry.node.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f6|grep -v "\-t"|grep -v "ip-101-74"|sort|sed 's/\.$//'|grep -Ev "^$")
+addresses=$(dig srv ansible.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|grep -v "ip-101-74\|minecraft\|repo1\|repo2\|repo3"|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
 
 output="{\n"
 output="${output} `cat ${BASEDIR}/hostfiles/hosts_*`\n"
@@ -20,6 +20,15 @@ done <<< "$addresses"
 
 output="${output} ],"
 
+addresses=$(dig srv ansible.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
+
+output="${output}  \"npf_gameservers_all\": [\n"
+
+while read -r address; do
+  output="${output}    \"${address}\",\n"
+done <<< "$addresses"
+
+output="${output} ],"
 
 output="${output}\n  \"npf_gameservers-current-rack\": [\n"
 
