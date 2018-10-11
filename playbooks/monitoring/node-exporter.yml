@@ -45,6 +45,14 @@
       group: node_exporter
       mode: 0775
 
+  - name: Create textfile exporter directory
+    file:
+      path: /var/lib/node_exporter/textfile_collector
+      state: directory
+      owner: node_exporter
+      group: node_exporter
+      mode: 0775 
+
   - name: Download file with check (sha256)
     get_url:
       url: https://github.com/prometheus/node_exporter/releases/download/v0.16.0/node_exporter-0.16.0.linux-amd64.tar.gz

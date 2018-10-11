@@ -1,0 +1,17 @@
+---
+- hosts: npf_gameservers_all
+  gather_facts: no
+  tasks:
+  - service: name=node_exporter state=stopped
+    ignore_errors: yes
+
+  - name: copy node_exporter systemd files
+    copy:
+      src: assets/node_exporter.service
+      dest: /etc/systemd/system/node_exporter.service
+      owner: root
+      group: root
+
+  - name: reload daemond
+    command: systemctl daemon-reload
+  - service: name=node_exporter state=restarted

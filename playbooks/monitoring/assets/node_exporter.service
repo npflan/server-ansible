@@ -6,8 +6,11 @@ After=network-online.target
 [Service]
 User=node_exporter
 Group=node_exporter
+Environment='COLLECTORTEXTFILE=--collector.textfile.directory /var/lib/node_exporter/textfile_collector' 'COLLECTORIGNOREFSTYPES=--collector.filesystem.ignored-fs-types="^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|tmpfs|fuse.lxcfs)$"'
+ExecStart=/usr/local/bin/node_exporter $COLLECTORTEXTFILE $COLLECTORIGNOREFSTYPES
 Type=simple
-ExecStart=/usr/local/bin/node_exporter
+Restart=always
+TimeoutSec=5
 
 [Install]
 WantedBy=multi-user.target
