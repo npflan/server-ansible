@@ -9,9 +9,9 @@
     gameservers_per_host: 16
     netid_maskbit: 28
     ospf_area:
-      "101": 53
-      "102": 56
-      "103": 57
+      "101": 51
+      "102": 52
+      "103": 53
   tasks:
   - name: listen for cdp
     shell: timeout 60 tcpdump -nn -v -i eth0 -s 1500 -c 1 'ether[20:2] == 0x2000'|awk 'match($0, /GigabitEthernet1\/([0-9]{1,2})/,a){print a[1]}'
