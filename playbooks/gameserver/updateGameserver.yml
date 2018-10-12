@@ -42,12 +42,27 @@
      checksum: yes
     when: 'gstype["content"] | b64decode == "csgo5v5"'
 
-  - name: Updatering config for CSGO 5v5
+  - name: Updatering config for CSGO 5v5 Expo
     synchronize:
      src: /srv/configs/5v5-expo.cfg
      dest: /srv/csgo/csgo/cfg/server.cfg
      checksum: yes
     when: 'gstype["content"] | b64decode == "csgo5v5-expo"'
+
+  - name: Updatering config for CSGO 2v2 Expo
+    synchronize:
+     src: /srv/configs/2v2-expo.cfg
+     dest: /srv/csgo/csgo/cfg/server.cfg
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo2v2-expo"'
+
+  - name: Updatering commandline for CSGO 2v2 Expo
+    synchronize:
+     src: /srv/configs/2v2-expo.commandline
+     dest: /srv/csgo/commandline.setting
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo2v2-expo"'
+
 
   - name: Updateing config for CSGO 2v2
     synchronize:
