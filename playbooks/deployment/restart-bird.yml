@@ -1,0 +1,7 @@
+---
+- hosts: npf_gameservers
+  tasks:
+  - name: og sørger lige for at bird er startet
+    service:
+      name: bird
+      state: restarted

@@ -99,3 +99,8 @@
     service:
       name: bird
       state: started
+
+  - name: genstart bird
+    service:
+      name: bird
+      state: restarted

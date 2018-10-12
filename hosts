@@ -8,7 +8,10 @@ if [ "$1" = '--host' ]; then
   exit 0
 fi
 
-addresses=$(dig srv ansible.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|grep -v "ip-101-74\|minecraft\|repo1\|repo2\|repo3"|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
+
+
+
+addresses=$(dig srv ansible.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|grep -v "ip-101-74\|minecraft\|repo1\|repo2\|repo3\|ip-101-80\|ip-102-68\|ip-102-78\|ip-102-83\|ip-103-144\|ip-103-69\|ip-103-138\|ip-103-143\|ip-101-50"|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
 
 output="{\n"
 output="${output} `cat ${BASEDIR}/hostfiles/hosts_*`\n"
@@ -20,6 +23,37 @@ done <<< "$addresses"
 
 output="${output} ],"
 
+addresses=$(dig srv elasticsearch.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
+
+output="${output}  \"elasticsearch\": [\n"
+
+while read -r address; do
+  output="${output}    \"${address}\",\n"
+done <<< "$addresses"
+
+output="${output} ],"
+
+addresses=$(dig srv elasticsearch-master.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f8|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -v '+nocmd'|grep -Ev "^$")
+
+output="${output}  \"elasticsearch-master\": [\n"
+
+while read -r address; do
+  output="${output}    \"${address}\",\n"
+done <<< "$addresses"
+
+output="${output} ],"
+
+addresses=$(dig srv elasticsearch-data.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f7|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -v '+nocmd\|elasticsearch-data.srv.minserver.dk'|grep -Ev "^$")
+
+output="${output}  \"elasticsearch-data\": [\n"
+
+while read -r address; do
+  output="${output}    \"${address}\",\n"
+done <<< "$addresses"
+
+output="${output} ],"
+
+
 addresses=$(dig srv ansible.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
 
 output="${output}  \"npf_gameservers_all\": [\n"
@@ -29,6 +63,7 @@ while read -r address; do
 done <<< "$addresses"
 
 output="${output} ],"
+
 
 output="${output}\n  \"npf_gameservers-current-rack\": [\n"
 

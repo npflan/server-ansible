@@ -1,0 +1,6 @@
+---
+- hosts: elasticsearch
+  gather_facts: yes
+  tasks:
+    - debug: var=ansible_processor_cores
+    - debug: var=ansible_memory_mb

@@ -1,0 +1,17 @@
+---
+- hosts: elasticsearch-data
+  gather_facts: no
+  tasks:
+  - name: copy data.yml config files
+    copy:
+      src: assets/data.yml
+      dest: /etc/elasticsearch/elasticsearch.yml
+      owner: root
+      group: elasticsearch
+
+  - name: reload daemons
+    command: systemctl daemon-reload
+
+  - name: make sure elasticsearch is started
+    service: name=elasticsearch state=restarted enabled=yes
+

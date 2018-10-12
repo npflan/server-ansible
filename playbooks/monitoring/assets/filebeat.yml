@@ -19,12 +19,17 @@ filebeat.inputs:
 # Below are the input specific configurations.
 
 - type: log
+  enabled: true
   paths:
     - /srv/logs/csgo/*/*.log
+    - /srv/logs/*/*.log
+  include_lines: [' killed ', 'assisted killing', 'attacked', 'connected', 'entered the game', 'purchased', 'switched from team','Molotov','World triggered', 'Game Over','Team scored', 'Team triggered', 'disconnected', 'threw', 'suicide']
   fields:
     pipeline: csgo_gamelogs
 
+
 - type: log
+  enabled: true
   paths:
     - /var/log/kern.log
   include_lines: ['EDAC MC0:']
@@ -33,7 +38,7 @@ filebeat.inputs:
 
 - type: log
   # Change to true to enable this input configuration.
-  enabled: true
+  enabled: false
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
     - /var/log/*.log
@@ -88,7 +93,7 @@ filebeat.config.modules:
 #==================== Elasticsearch template setting ==========================
 
 setup.template.settings:
-  index.number_of_shards: 3
+  index.number_of_shards: 2
   #index.codec: best_compression
   #_source.enabled: false
 
@@ -152,7 +157,7 @@ setup.kibana:
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["es-cluster-elasticsearch-client.default.svc.npf.dk:9200"]
+  hosts: ["ip-101-80.rack1.srv.minserver.dk:9200", "ip-102-83.rack2.srv.minserver.dk:9200","ip-102-68.rack2.srv.minserver.dk:9200","ip-103-143.rack3.srv.minserver.dk:9200","ip-103-69.rack3.srv.minserver.dk:9200","ip-102-78.rack2.srv.minserver.dk:9200"]
   pipeline: '%{[fields.pipeline]}'
   index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
 

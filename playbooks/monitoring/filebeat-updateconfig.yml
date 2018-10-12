@@ -1,5 +1,5 @@
 ---
-- hosts: npf_gameservers
+- hosts: npf_gameservers_all
   gather_facts: no
   tasks:
   - name: copy filebeat.yml config files
