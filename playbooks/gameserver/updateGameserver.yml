@@ -77,3 +77,9 @@
      owner: steam
      group: steam
      recurse: yes
+
+  - name: Changeing permission on /srv/server.sh
+    file:
+     dest: /srv/server.sh
+     mode: a+x
+
