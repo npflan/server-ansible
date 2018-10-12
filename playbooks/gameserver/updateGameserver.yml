@@ -42,6 +42,12 @@
      checksum: yes
     when: 'gstype["content"] | b64decode == "csgo5v5"'
 
+  - name: Updatering config for CSGO 5v5
+    synchronize:
+     src: /srv/configs/5v5-expo.cfg
+     dest: /srv/csgo/csgo/cfg/server.cfg
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo5v5-expo"'
 
   - name: Updateing config for CSGO 2v2
     synchronize:
