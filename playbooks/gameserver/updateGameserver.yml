@@ -13,6 +13,13 @@
       - "--exclude=/srv/csgo/csgo/*.txt"
       - "--exclude=/srv/csgo/csgo/cfg/server.cfg"
 
+
+  - name: Updatering general server.sh script
+    synchronize:
+     src: /srv/server.sh
+     dest: /srv/server,sh
+     checksum: yes
+
   - name: Check if servertype exists
     stat:
      path: /srv/gametype.config
@@ -28,9 +35,6 @@
      src: /srv/gametype.config
     register: gstype
 
-#  - debug:
-#     msg: "{{ gstype['content'] | b64decode }}"
-
   - name: Updatering config for CSGO 5v5
     synchronize:
      src: /srv/configs/5v5.cfg
@@ -45,6 +49,27 @@
      dest: /srv/csgo/csgo/cfg/server.cfg
      checksum: yes
     when: 'gstype["content"] | b64decode == "csgo2v2"'
+
+  - name: Updateing server.sh for GOTV-Relay
+    synchronize:
+     src: /srv/configs/pro-relay.sh
+     dest: /srv/server.sh
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo5v5-pro-relay"'
+
+  - name: Updateing config for GOTV-Relay
+    synchronize:
+     src: /srv/configs/pro-relay.cfg
+     dest: /srv/csgo/csgo/cfg/server.cfg
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo5v5-pro-relay"'
+
+  - name: Updateing commandline for GOTV-Relay
+    synchronize:
+     src: /srv/configs/pro-relay.commandline
+     dest: /srv/csgo/csgo/cfg/server.commandline
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo5v5-pro-relay"'
 
   - name: Updateing directory owner on /srv
     file:
