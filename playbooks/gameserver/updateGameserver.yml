@@ -42,13 +42,6 @@
      checksum: yes
     when: 'gstype["content"] | b64decode == "csgo5v5"'
 
-  - name: Updatering commandline for CSGO 5v5
-    synchronize:
-     src: /srv/configs/5v5.commandline
-     dest: /srv/csgo/commandline.setting
-     checksum: yes
-    when: 'gstype["content"] | b64decode == "csgo5v5"'
-
   - name: Updatering config for CSGO 5v5 Expo
     synchronize:
      src: /srv/configs/5v5-expo.cfg
@@ -77,6 +70,13 @@
      dest: /srv/csgo/csgo/cfg/server.cfg
      checksum: yes
     when: 'gstype["content"] | b64decode == "csgo2v2"'
+
+  - name: Updatering commandline for CSGO 2v2
+    synchronize:
+     src: /srv/configs/2v2.commandline
+     dest: /srv/csgo/commandline.setting
+     checksum: yes
+    when: 'gstype["content"] | b64decode == "csgo5v5"'
 
   - name: Updateing server.sh for GOTV-Relay
     synchronize:
