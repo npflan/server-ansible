@@ -76,7 +76,7 @@
      src: /srv/configs/2v2.commandline
      dest: /srv/csgo/commandline.setting
      checksum: yes
-    when: 'gstype["content"] | b64decode == "csgo5v5"'
+    when: 'gstype["content"] | b64decode == "csgo2v2"'
 
   - name: Updateing server.sh for GOTV-Relay
     synchronize:
