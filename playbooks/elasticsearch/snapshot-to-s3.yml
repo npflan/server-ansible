@@ -1,0 +1,18 @@
+---
+actions:
+  1:
+    action: snapshot
+    options:
+      name: npf2018
+      repository: s3-backup
+    filters:
+    - filtertype: pattern
+      kind: regex
+      value: 'npf2018'
+
+  2:
+    action: delete_indices
+    filters:
+    - filtertype: pattern
+      kind: regex
+      value: 'npf2018'
