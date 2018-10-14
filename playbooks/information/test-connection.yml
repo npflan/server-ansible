@@ -1,0 +1,9 @@
+---
+- hosts: npf_gameservers
+  gather_facts: yes
+  tasks:
+  - name: List number of physical cores
+    setup: filter="ansible_processor_*"
+    register: physCores
+
+  - command: curl https://speed.hetzner.de/1GB.bin -o /dev/null

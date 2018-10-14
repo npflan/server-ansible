@@ -23,7 +23,7 @@ filebeat.inputs:
   paths:
     - /srv/logs/csgo/*/*.log
     - /srv/logs/*/*.log
-  include_lines: [' killed ', 'assisted killing', 'attacked', 'connected', 'entered the game', 'purchased', 'switched from team','Molotov','World triggered', 'Game Over','Team scored', 'Team triggered', 'disconnected', 'threw', 'suicide']
+  include_lines: [' killed ', 'assisted killing', 'attacked', 'connected', 'entered the game', 'purchased', 'switched from team','Molotov','World triggered', 'Game Over','Team scored', 'Team triggered', 'disconnected', 'threw', 'suicide', ' say ', 'money change']
   fields:
     pipeline: csgo_gamelogs
 
