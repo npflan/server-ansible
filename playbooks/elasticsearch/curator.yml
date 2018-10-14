@@ -4,3 +4,4 @@ client:
     - ip-102-68.rack2.srv.minserver.dk
   port: 9200
   timeout: 300
+

@@ -1,0 +1,9 @@
+---
+actions:
+  1:
+    action: restore
+    options:
+      name: 
+      repository: s3-backup
+    filters:
+    - filtertype: none
