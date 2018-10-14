@@ -2,5 +2,8 @@
 - hosts: npf_gameservers
   tasks:
 
-  - name: Starting gameservers
-    command: scp -r /srv/logs/ 10.100.103.8:/srv/logs/
+  - name: Fetching logs
+    synchronize:
+      src: /srv/logs/
+      dest: /srv/logs
+      mode: pull
