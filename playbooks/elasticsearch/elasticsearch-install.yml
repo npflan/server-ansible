@@ -12,8 +12,8 @@
       state: present
 
   - name: download es
-    command: curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.4.2.deb
+    command: curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.3.1-amd64.deb
   
   - name: install es
-    command: dpkg -i elasticsearch-6.4.2.deb
+    command: dpkg -i elasticsearch-7.3.1-amd64.deb
 

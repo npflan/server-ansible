@@ -8,76 +8,60 @@ if [ "$1" = '--host' ]; then
   exit 0
 fi
 
-
-
-
-addresses=$(dig srv ansible.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|grep -v "ip-101-74\|minecraft\|repo1\|repo2\|repo3\|ip-101-80\|ip-102-68\|ip-102-78\|ip-102-83\|ip-103-144\|ip-103-69\|ip-103-138\|ip-103-143\|ip-101-50"|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
+addresses=$(nmap --min-parallelism 50 --min-rate 50 -p 22 10.100.101-103.50-250 --open| grep -v "10.100.101.223" | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}")
 
 output="{\n"
 output="${output} `cat ${BASEDIR}/hostfiles/hosts_*`\n"
+
+if [ -n "$addresses" ]; then
 output="${output}  \"npf_gameservers\": [\n"
-
+count=0
 while read -r address; do
-  output="${output}    \"${address}\",\n"
+  if [[ $count -gt 0 ]]; then
+     output="${output},\n"
+  fi
+  output="${output}    \"${address}\""
+  count=$(expr $count + 1)
 done <<< "$addresses"
+output="${output}\n ]"
 
-output="${output} ],"
-
-addresses=$(dig srv elasticsearch.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
-
-output="${output}  \"elasticsearch\": [\n"
-
-while read -r address; do
-  output="${output}    \"${address}\",\n"
-done <<< "$addresses"
-
-output="${output} ],"
-
-addresses=$(dig srv elasticsearch-master.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f8|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -v '+nocmd'|grep -Ev "^$")
-
-output="${output}  \"elasticsearch-master\": [\n"
-
-while read -r address; do
-  output="${output}    \"${address}\",\n"
-done <<< "$addresses"
-
-output="${output} ],"
-
-addresses=$(dig srv elasticsearch-data.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f7|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -v '+nocmd\|elasticsearch-data.srv.minserver.dk'|grep -Ev "^$")
-
-output="${output}  \"elasticsearch-data\": [\n"
-
-while read -r address; do
-  output="${output}    \"${address}\",\n"
-done <<< "$addresses"
-
-output="${output} ],"
-
-
-addresses=$(dig srv ansible.srv.minserver.dk +nocmd +noall +answer @10.101.128.128|cut -d" " -f5|sort|sed 's/\.$//'|sed 's/<<>>//'|grep -Ev "^$")
-
-output="${output}  \"npf_gameservers_all\": [\n"
-
-while read -r address; do
-  output="${output}    \"${address}\",\n"
-done <<< "$addresses"
-
-output="${output} ],"
-
-
-output="${output}\n  \"npf_gameservers-current-rack\": [\n"
 
 # Information om nucærende rack
-rack=$(ip -f inet address | grep 10.100 | cut -d. -f 3|sed 's/^10//')
-rackServers=$(printf -- "%s\n" "${addresses[@]}" | grep "rack$rack")
+rack=$(ip -f inet address | grep 10.100 | cut -d. -f 3)
+rackServers=$(printf -- "%s\n" "${addresses[@]}" | grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.$rack\.[0-9]{1,3}")
 
-
+if [ -n "$rackServers" ]; then
+output="${output},\n  \"npf_gameservers-current-rack\": [\n"
+count=0
 while read -r address; do
-  output="${output}    \"${address}\",\n"
+  if [[ $count -gt 0 ]]; then
+     output="${output},\n"
+  fi
+  output="${output}    \"${address}\""
+  count=$(expr $count + 1)
 done <<< "$rackServers"
+output="${output}\n ]"
+fi
+fi
 
-output="${output} ]\n}"
+#ElasticSerach from netbox
+#curl -s https://netbox.minserver.dk/api/dcim/devices/?role=server-elasticsearch | jq -r '.results[].primary_ip4.address' | sort | sed -r 's/\/24//g'
+#elasticSearchServer=$(curl -s https://netbox.minserver.dk/api/dcim/devices/?role=server-elasticsearch | jq -r '.results[].primary_ip4.address' | sort | sed -r 's/\/24//g')
+#echo $elasticSearchServer
+#if [[ "{" != $output ]]; then
+#   output="${output},\n"
+#fi
+#output="${output}\n  \"elasticsearch\": [\n"
+#count=0
+#while read -r address; do
+#  if [[ $count -gt 0 ]]; then
+#     output="${output},\n"
+#  fi
+#  output="${output}    \"${address}\""
+#  count=$(expr $count + 1)
+#done <<< $elasticSearchServer
+#output="${output}\n]"
 
-
+output="${output} \n}"
 #echo -e `echo $output | sed 's/\(.*\),/\1/'`
 echo -e $output

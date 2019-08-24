@@ -28,3 +28,8 @@ $RECYCLE.BIN/
 *.lnk
 
 playbooks/elasticsearch/assets/*-aws.yml
+
+derp.ini
+derp.txt
+
+*.dpkg-dist

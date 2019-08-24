@@ -1,17 +1,8 @@
 ---
 - hosts: npf_gameservers
-  gather_facts: yes
+  gather_facts: no
   tasks:
-  - name: List number of physical cores
-    setup: filter="ansible_processor_*"
-    register: physCores
+  - shell: grep "model name" /proc/cpuinfo | head -1
+    register: ps
 
-  
-  - command: hpuid -e
-    when: "(ansible_memtotal_mb / 1024) / (physCores['ansible_facts']['ansible_processor_cores']*physCores['ansible_facts']['ansible_processor_count'] ) < 1.9 "
-  
-  - debug: var={{ ansible_memtotal_mb / 1024 }}
-    when: "(ansible_memtotal_mb / 1024) / (physCores['ansible_facts']['ansible_processor_cores']*physCores['ansible_facts']['ansible_processor_count'] ) < 1.9 "
-
-  - debug: var={{ physCores['ansible_facts']['ansible_processor_cores'] * physCores['ansible_facts']['ansible_processor_count']}}
-    when: "(ansible_memtotal_mb / 1024) / (physCores['ansible_facts']['ansible_processor_cores']*physCores['ansible_facts']['ansible_processor_count'] ) < 1.9 "
+  - debug: var=ps.stdout_lines
