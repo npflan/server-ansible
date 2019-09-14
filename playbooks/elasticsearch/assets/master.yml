@@ -66,14 +66,17 @@ network.host: 0.0.0.0
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
 discovery.zen.ping.unicast.hosts: [
-"ip-101-80.rack1.srv.minserver.dk",
-"ip-102-83.rack2.srv.minserver.dk",
-"ip-102-68.rack2.srv.minserver.dk",
-"ip-103-143.rack3.srv.minserver.dk",
-"ip-103-69.rack3.srv.minserver.dk",
-"ip-102-78.rack2.srv.minserver.dk",
-"ip-103-138.rack3.srv.minserver.dk",
-"ip-103-144.rack3.srv.minserver.dk"
+"10.100.103.6",
+"10.100.101.6",
+"10.100.102.7",
+"10.100.102.6",
+"10.100.103.7",
+"10.100.101.7"
+]
+
+cluster.initial_master_nodes: [
+"10.100.103.6",
+"10.100.101.6"
 ]
 #
 # Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
@@ -100,3 +103,5 @@ node.master: true
 node.data: false
 node.ingest: false
 search.remote.connect: false
+
+xpack.ml.enabled: false

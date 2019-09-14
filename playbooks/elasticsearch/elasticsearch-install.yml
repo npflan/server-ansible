@@ -1,6 +1,6 @@
 ---
 - hosts: elasticsearch
-  gather_facts: yes
+  gather_facts: no
   tasks:
   - name: apt upgrade
     apt:
