@@ -1,11 +1,23 @@
 ---
-- hosts: npf_gameservers_all
+- hosts: npf_gameservers
   gather_facts: no
   tasks:
   - name: copy filebeat.yml config files
     copy:
       src: assets/filebeat.yml
       dest: /etc/filebeat/filebeat.yml
+      owner: root
+      group: root
+
+  - name: Create modules.d
+    file:
+      path: /etc/filebeat/modules.d
+      state: directory
+
+  - name: copy system.yml to modules.d
+    copy:
+      src: assets/modules.d/system.yml
+      dest: /etc/filebeat/modules.d/system.yml
       owner: root
       group: root
 

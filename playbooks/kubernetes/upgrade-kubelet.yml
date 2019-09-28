@@ -1,0 +1,17 @@
+---
+- hosts: kubernetes-nodes
+  tasks:
+  - name: Install kubelet version
+    apt:
+      name: "{{ packages }}"
+      update_cache: yes
+    vars:
+      packages:
+      - kubelet=1.15.4-00
+      - kubectl=1.15.4-00
+      - kubeadm=1.15.4-00
+
+  - name: Restart service kubelet
+    service:
+      name: kubelet
+      state: restarted

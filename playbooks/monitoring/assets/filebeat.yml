@@ -29,7 +29,7 @@ filebeat.inputs:
 
 
 - type: log
-  enabled: true
+  enabled: false
   paths:
     - /var/log/kern.log
   include_lines: ['EDAC MC0:']
@@ -157,7 +157,7 @@ setup.kibana:
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["ip-101-80.rack1.srv.minserver.dk:9200", "ip-102-83.rack2.srv.minserver.dk:9200","ip-102-68.rack2.srv.minserver.dk:9200","ip-103-143.rack3.srv.minserver.dk:9200","ip-103-69.rack3.srv.minserver.dk:9200","ip-102-78.rack2.srv.minserver.dk:9200"]
+  hosts: ["10.100.101.7:9200","10.100.102.6:9200","10.100.102.7:9200","10.100.103.7:9200"]
   pipeline: '%{[fields.pipeline]}'
   index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
 
@@ -169,7 +169,7 @@ output.elasticsearch:
 setup.template:
   name: "filebeat"
   pattern: "filebeat-*"
-  enabled: false
+  enabled: true
 
 #----------------------------- Logstash output --------------------------------
 #output.logstash:

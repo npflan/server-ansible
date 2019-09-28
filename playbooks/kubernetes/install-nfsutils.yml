@@ -1,0 +1,15 @@
+---
+- hosts: kubernetes-nodes
+  tasks:
+  - name: Install kubelet version
+    apt:
+      name: "{{ packages }}"
+      update_cache: yes
+    vars:
+      packages:
+      - nfs-common
+
+#  - name: Restart service kubelet
+#    service:
+#      name: kubelet
+#      state: restarted
